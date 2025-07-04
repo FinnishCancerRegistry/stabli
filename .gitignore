@@ -1,0 +1,10 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+inst/doc
+Rplots.pdf
+*.Rproj
+*.code-workspace
+.radian_history
+sandbox.R

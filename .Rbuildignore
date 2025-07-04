@@ -1,0 +1,10 @@
+^\.git$
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.Rprofile$
+^.*\.code-workspace$
+^dev$
+^data-raw$
+^sandbox\.R$
+^\.radian_history$
+^LICENSE\.md$

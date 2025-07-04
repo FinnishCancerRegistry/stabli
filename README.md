@@ -4,6 +4,10 @@
 # Package `stabli`
 
 
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/FinnishCancerRegistry/stabli/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/FinnishCancerRegistry/stabli/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
 ## Description
 
 Create and make use of a more formal definition of a table of

@@ -6,6 +6,10 @@
 "_PACKAGE"
 
 # @codedoc_comment_block R_package_description(stabli)
+# <!-- badges: start -->
+# [![R-CMD-check](https://github.com/FinnishCancerRegistry/stabli/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/FinnishCancerRegistry/stabli/actions/workflows/R-CMD-check.yaml)
+# <!-- badges: end -->
+#
 # ## Description
 #
 # ${paste0(read.dcf("DESCRIPTION", fields = "Description"), collapse = "\n")}

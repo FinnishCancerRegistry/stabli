@@ -6,6 +6,7 @@
 \alias{stabli-package}
 \title{stabli: Statistical Tables and Lists Thereof}
 \description{
+\href{https://github.com/FinnishCancerRegistry/stabli/actions/workflows/R-CMD-check.yaml}{\if{html}{\figure{https://github.com/FinnishCancerRegistry/stabli/actions/workflows/R-CMD-check.yaml/badge.svg}}}
 \subsection{Description}{
 
 Create and make use of a more formal definition of a table of

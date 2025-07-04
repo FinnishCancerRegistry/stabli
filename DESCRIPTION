@@ -1,5 +1,5 @@
-Package: stabli
 Type: Package
+Package: stabli
 Title: Statistical Tables and Lists Thereof
 Version: 0.1.0
 Authors@R: 
@@ -7,14 +7,15 @@ Authors@R:
            comment = c(ORCID = "0000-0001-8624-6754"))
 Description: Create and make use of a more formal definition of a table of
     statistics. Store metadata such as the names of stratifying and value
-    columns into the object itself so you don't have to keep track yourself.
-Encoding: UTF-8
+    columns into the object itself so you don't have to keep track
+    yourself.
+License: MIT + file LICENSE
 Imports:
-    dbc,
-    data.table
+    data.table,
+    dbc
 Suggests:
     codedoc,
     roxygen2
+Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-License: MIT + file LICENSE

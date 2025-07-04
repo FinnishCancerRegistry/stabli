@@ -128,7 +128,12 @@ metadata to reflect the changes.
 
 \code{rbind} method for class \code{stat_table}. Performs the following steps:
 \itemize{
-\item 
+\item Collects one big list of metadata by combining individual metadata
+elements in the individual \code{stat_table} objects with
+\code{unique(unlist(metadatum_by_st))}.
+\item Calls the next method, i.e. \code{rbind.data.table} with \code{list(...)}.
+\item Sets attributes.
+\item Returns a proper \code{stat_table}.
 }
 }
 

@@ -360,7 +360,9 @@ rbind.stat_table <- function(...) {
   # @codedoc_comment_block stabli::rbind.stat_table
   # `rbind` method for class `stat_table`. Performs the following steps:
   #
-  # -
+  # - Collects one big list of metadata by combining individual metadata
+  #   elements in the individual `stat_table` objects with
+  #   `unique(unlist(metadatum_by_st))`.
   # @codedoc_comment_block stabli::rbind.stat_table
   al <- list(...)
   dt_indices <- which(vapply(al, inherits, logical(1L), what = "data.table"))
@@ -382,6 +384,9 @@ rbind.stat_table <- function(...) {
     })))
   })
   names(big_meta) <- meta_nms
+  # @codedoc_comment_block stabli::rbind.stat_table
+  # - Calls the next method, i.e. `rbind.data.table` with `list(...)`.
+  # @codedoc_comment_block stabli::rbind.stat_table
   on.exit({
     lapply(al[dt_indices], function(dt) {
       stabli::stat_table_class_set(dt)
@@ -396,6 +401,10 @@ rbind.stat_table <- function(...) {
     NULL
   })
   out <- do.call(rbind, al)
+  # @codedoc_comment_block stabli::rbind.stat_table
+  # - Sets attributes.
+  # - Returns a proper `stat_table`.
+  # @codedoc_comment_block stabli::rbind.stat_table
   stabli::stat_table_set(out, meta = big_meta)
   return(out[])
 }

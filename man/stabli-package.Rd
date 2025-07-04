@@ -10,7 +10,8 @@
 
 Create and make use of a more formal definition of a table of
 statistics. Store metadata such as the names of stratifying and value
-columns into the object itself so you don't have to keep track yourself.
+columns into the object itself so you don't have to keep track
+yourself.
 }
 
 \subsection{Example}{

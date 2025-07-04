@@ -91,7 +91,7 @@ Assert that an object is a proper \code{stat_table} object. A \code{stat_table} 
 pass these checks:
 \itemize{
 \item Must be of class \verb{$(stat_table_class_name()\}}.
-\item Must have metadata that passes \code{stable::stat_table_meta_assert}.
+\item Must have metadata that passes \code{stabli::stat_table_meta_assert}.
 }
 
 
@@ -133,6 +133,71 @@ metadata to reflect the changes.
 }
 
 \examples{
+
+# stabli::stat_table_set
+st <- data.table::data.table(a = 1:3, v = 3:1)
+stabli::stat_table_set(
+  st,
+  list(stratum_col_nms = "a", value_col_nms = "v")
+)
+stopifnot(identical(
+  stabli::stat_table_meta_get(st)[["stratum_col_nms"]],
+  "a"
+))
+
+# stabli::stat_table
+st <- stabli::stat_table(
+  data.table::data.table(a = 1:3, v = 3:1),
+  list(
+    stratum_col_nms = "a",
+    value_col_nms = "v"
+  )
+)
+stopifnot(identical(
+  stabli::stat_table_meta_get(st)[["stratum_col_nms"]],
+  "a"
+))
+
+# stabli::stat_table_assert
+st <- stabli::stat_table(
+  data.table::data.table(a = 1:3, v = 3:1),
+  list(
+    stratum_col_nms = "a",
+    value_col_nms = "v"
+  )
+)
+stat_table_assert(st)
+
+# stabli::as.stat_table.stat_table
+st <- stabli::as.stat_table(
+  data.table::data.table(a = 1:3, v = 3:1),
+  list(
+    stratum_col_nms = "a",
+    value_col_nms = "v"
+  )
+)
+st <- stabli::as.stat_table(st)
+stat_table_assert(st)
+
+# stabli::as.stat_table.data.table
+st <- stabli::as.stat_table(
+  data.table::data.table(a = 1:3, v = 3:1),
+  list(
+    stratum_col_nms = "a",
+    value_col_nms = "v"
+  )
+)
+stat_table_assert(st)
+
+# stabli::print.stat_table
+st <- stabli::as.stat_table(
+  data.table::data.table(a = 1:3, v = 3:1),
+  list(
+    stratum_col_nms = "a",
+    value_col_nms = "v"
+  )
+)
+print(st)
 
 # stabli::`[.stat_table`
 dt <- data.table::CJ(sex = 1:2, agegroup = 1:18)

@@ -103,3 +103,47 @@ Set an object in place to have class
 \code{"stat_table"}.
 }
 
+\examples{
+
+# stabli::stat_table_meta_get
+st <- stabli::stat_table(
+  data.table::data.table(a = 1:3, v = 3:1),
+  list(
+    stratum_col_nms = "a",
+    value_col_nms = "v"
+  )
+)
+stopifnot(identical(
+  stabli::stat_table_meta_get(st)[["stratum_col_nms"]],
+  "a"
+))
+
+# stabli::stat_table_meta_set
+st <- stabli::stat_table(
+  data.table::data.table(a = 1:3, v = 3:1)
+)
+stabli::stat_table_meta_set(
+  st,
+  list(stratum_col_nms = "a", value_col_nms = "v")
+)
+stopifnot(identical(
+  stabli::stat_table_meta_get(st)[["stratum_col_nms"]],
+  "a"
+))
+
+# stabli::stat_table_meta_assert
+stabli::stat_table_meta_assert(
+  list(stratum_col_nms = "a", value_col_nms = "v")
+)
+st <- stabli::stat_table(
+  data.table::data.table(a = 1:3, v = 3:1),
+  list(
+    stratum_col_nms = "a",
+    value_col_nms = "v"
+  )
+)
+stabli::stat_table_meta_assert(
+  list(stratum_col_nms = "a", value_col_nms = "v"),
+  stat_table = st
+)
+}

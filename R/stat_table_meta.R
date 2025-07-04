@@ -33,6 +33,20 @@ stat_table_meta_default <- function() {
 #'   "stabli::stat_table_meta_get",
 #'   "stat_table_meta"
 #' )
+#' @examples
+#'
+#' # stabli::stat_table_meta_get
+#' st <- stabli::stat_table(
+#'   data.table::data.table(a = 1:3, v = 3:1),
+#'   list(
+#'     stratum_col_nms = "a",
+#'     value_col_nms = "v"
+#'   )
+#' )
+#' stopifnot(identical(
+#'   stabli::stat_table_meta_get(st)[["stratum_col_nms"]],
+#'   "a"
+#' ))
 stat_table_meta_get <- function(x) {
   # @codedoc_comment_block stabli::stat_table_meta_get
   # Get metadata of a `stat_table`.
@@ -47,6 +61,20 @@ stat_table_meta_get <- function(x) {
 #'   "stabli::stat_table_meta_set",
 #'   "stat_table_meta"
 #' )
+#' @examples
+#'
+#' # stabli::stat_table_meta_set
+#' st <- stabli::stat_table(
+#'   data.table::data.table(a = 1:3, v = 3:1)
+#' )
+#' stabli::stat_table_meta_set(
+#'   st,
+#'   list(stratum_col_nms = "a", value_col_nms = "v")
+#' )
+#' stopifnot(identical(
+#'   stabli::stat_table_meta_get(st)[["stratum_col_nms"]],
+#'   "a"
+#' ))
 stat_table_meta_set <- function(x, meta) {
   # @codedoc_comment_block stabli::stat_table_meta_set
   # Set (assign) metadata of a `stat_table`.
@@ -54,13 +82,34 @@ stat_table_meta_set <- function(x, meta) {
   #' @param meta `[list]` (no default)
   #'
   #' List of metadata to save into `stat_table` object.
-  stat_table_meta_assert(x = meta, stat_table = x)
+  if (is.null(meta)) {
+    meta <- stabli::stat_table_meta_default()
+  } else {
+    stat_table_meta_assert(x = meta, stat_table = x)
+  }
   data.table::setattr(x, name = stat_table_meta_name(), value = meta)
 }
 
 #' @eval codedoc::pkg_doc_fun(
 #'   "stabli::stat_table_meta_assert",
 #'   "stat_table_meta"
+#' )
+#' @examples
+#'
+#' # stabli::stat_table_meta_assert
+#' stabli::stat_table_meta_assert(
+#'   list(stratum_col_nms = "a", value_col_nms = "v")
+#' )
+#' st <- stabli::stat_table(
+#'   data.table::data.table(a = 1:3, v = 3:1),
+#'   list(
+#'     stratum_col_nms = "a",
+#'     value_col_nms = "v"
+#'   )
+#' )
+#' stabli::stat_table_meta_assert(
+#'   list(stratum_col_nms = "a", value_col_nms = "v"),
+#'   stat_table = st
 #' )
 stat_table_meta_assert <- function(
   x,

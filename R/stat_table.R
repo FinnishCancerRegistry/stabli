@@ -13,6 +13,18 @@ NULL
 #'   "stabli::stat_table_set",
 #'   "stat_table"
 #' )
+#' @examples
+#'
+#' # stabli::stat_table_set
+#' st <- data.table::data.table(a = 1:3, v = 3:1)
+#' stabli::stat_table_set(
+#'   st,
+#'   list(stratum_col_nms = "a", value_col_nms = "v")
+#' )
+#' stopifnot(identical(
+#'   stabli::stat_table_meta_get(st)[["stratum_col_nms"]],
+#'   "a"
+#' ))
 stat_table_set <- function(
   x,
   meta = NULL
@@ -34,6 +46,20 @@ stat_table_set <- function(
 #'   "stabli::stat_table",
 #'   "stat_table"
 #' )
+#' @examples
+#'
+#' # stabli::stat_table
+#' st <- stabli::stat_table(
+#'   data.table::data.table(a = 1:3, v = 3:1),
+#'   list(
+#'     stratum_col_nms = "a",
+#'     value_col_nms = "v"
+#'   )
+#' )
+#' stopifnot(identical(
+#'   stabli::stat_table_meta_get(st)[["stratum_col_nms"]],
+#'   "a"
+#' ))
 stat_table <- function(
   x,
   meta = NULL
@@ -50,6 +76,17 @@ stat_table <- function(
 #'   "stabli::stat_table_assert",
 #'   "stat_table"
 #' )
+#' @examples
+#'
+#' # stabli::stat_table_assert
+#' st <- stabli::stat_table(
+#'   data.table::data.table(a = 1:3, v = 3:1),
+#'   list(
+#'     stratum_col_nms = "a",
+#'     value_col_nms = "v"
+#'   )
+#' )
+#' stat_table_assert(st)
 stat_table_assert <- function(
   x,
   x_nm = NULL,
@@ -74,7 +111,7 @@ stat_table_assert <- function(
     required_class = stat_table_class_name()
   )
   # @codedoc_comment_block stabli::stat_table_assert
-  # - Must have metadata that passes `stable::stat_table_meta_assert`.
+  # - Must have metadata that passes `stabli::stat_table_meta_assert`.
   # @codedoc_comment_block stabli::stat_table_assert
   stat_table_meta_assert(
     x = stat_table_meta_get(x),
@@ -104,6 +141,18 @@ as.stat_table <- function(
 #'   "stabli::as.stat_table.stat_table",
 #'   "stat_table"
 #' )
+#' @examples
+#'
+#' # stabli::as.stat_table.stat_table
+#' st <- stabli::as.stat_table(
+#'   data.table::data.table(a = 1:3, v = 3:1),
+#'   list(
+#'     stratum_col_nms = "a",
+#'     value_col_nms = "v"
+#'   )
+#' )
+#' st <- stabli::as.stat_table(st)
+#' stat_table_assert(st)
 as.stat_table.stat_table <- function(
   x,
   meta = NULL
@@ -112,11 +161,11 @@ as.stat_table.stat_table <- function(
   # Make a `stat_table` from another `stat_table` object by taking a copy.
   # If `is.null(meta)`, use the metadata from `x`.
   # @codedoc_comment_block stabli::as.stat_table.stat_table
-  out <- data.table::as.data.table(out)
+  out <- data.table::as.data.table(x)
   if (is.null(meta)) {
     meta <- stabli::stat_table_meta_get(x)
   }
-  stat_table_set(
+  stabli::stat_table_set(
     x = out,
     meta = meta
   )
@@ -127,11 +176,22 @@ as.stat_table.stat_table <- function(
 #'   "stabli::as.stat_table.data.table",
 #'   "stat_table"
 #' )
+#' @examples
+#'
+#' # stabli::as.stat_table.data.table
+#' st <- stabli::as.stat_table(
+#'   data.table::data.table(a = 1:3, v = 3:1),
+#'   list(
+#'     stratum_col_nms = "a",
+#'     value_col_nms = "v"
+#'   )
+#' )
+#' stat_table_assert(st)
 as.stat_table.data.table <- function(x, meta) {
   # @codedoc_comment_block stabli::as.stat_table.stat_table
   # Make a `stat_table` from a `data.table` object by taking a copy.
   # @codedoc_comment_block stabli::as.stat_table.stat_table
-  out <- data.table::as.data.table(out)
+  out <- data.table::as.data.table(x)
   stat_table_set(
     x = out,
     meta = meta
@@ -143,6 +203,17 @@ as.stat_table.data.table <- function(x, meta) {
 #'   "stabli::print.stat_table",
 #'   "stat_table"
 #' )
+#' @examples
+#'
+#' # stabli::print.stat_table
+#' st <- stabli::as.stat_table(
+#'   data.table::data.table(a = 1:3, v = 3:1),
+#'   list(
+#'     stratum_col_nms = "a",
+#'     value_col_nms = "v"
+#'   )
+#' )
+#' print(st)
 print.stat_table <- function(x, ...) {
   # @codedoc_comment_block stabli::print.stat_table
   # `print` method for class `stat_table`. Passes additional arguments via
@@ -152,7 +223,7 @@ print.stat_table <- function(x, ...) {
     # should not print in this instance at least: x[, "my_col" := value]
     return(invisible(NULL))
   }
-  meta <- stat_table_meta_get(x)
+  meta <- stabli::stat_table_meta_get(x)
   meta <- lapply(meta, intersect, x = names(x))
   cat("*** stat_table object ***\n")
   lapply(names(meta), function(meta_nm) {
@@ -189,7 +260,7 @@ print.stat_table <- function(x, ...) {
   # @codedoc_comment_block stabli::[.stat_table
   y <- NextMethod()
   if (is.data.frame(y)) {
-    stat_table_meta_set(y, stat_table_meta_get(x))
+    stabli::stat_table_meta_set(y, stabli::stat_table_meta_get(x))
   }
   return(y)
 }
@@ -260,7 +331,7 @@ stat_table_setnames <- function(
     ]
     dt[["col_nm"]]
   })
-  stat_table_meta_set(x = x, meta = meta)
+  stabli::stat_table_meta_set(x = x, meta = meta)
   return(x[])
 }
 

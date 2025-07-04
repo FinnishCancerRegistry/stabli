@@ -213,8 +213,8 @@ print.stat_table_list <- function(x, ...) {
     info_dt <- cbind(info_dt, meta[["meta_dt"]])
   }
   lapply(seq_along(x), function(i) {
-    stat_table <- x[[i]]
-    st_meta_list <- stat_table_meta_get(stat_table)
+    st <- x[[i]]
+    st_meta_list <- stat_table_meta_get(st)
     # @codedoc_comment_block stabli::print.stat_table_list
     #   + `dim`: Number of rows and columns.
     # @codedoc_comment_block stabli::print.stat_table_list
@@ -222,7 +222,7 @@ print.stat_table_list <- function(x, ...) {
       info_dt,
       i = i,
       j = "dim",
-      value = sprintf("(%i, %i)", nrow(stat_table), ncol(stat_table))
+      value = sprintf("(%i, %i)", nrow(st), ncol(st))
     )
     # @codedoc_comment_block stabli::print.stat_table_list
     #   + Every element of the metadata of the corresponding `stat_table`.

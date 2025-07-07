@@ -1,5 +1,5 @@
 #' @title List of Statistics Tables
-#' @description 
+#' @description
 #' A convenient list of `stat_table` objects.
 #' @name stat_table_list
 NULL
@@ -71,7 +71,7 @@ as.stat_table_list <- function(x, meta) {
 }
 
 #' @eval codedoc::pkg_doc_fun(
-#'   "stabli::as.stat_table_list.stat_table_list", 
+#'   "stabli::as.stat_table_list.stat_table_list",
 #'   "stat_table_list"
 #')
 as.stat_table_list.stat_table_list <- function(x, meta = NULL) {
@@ -81,7 +81,7 @@ as.stat_table_list.stat_table_list <- function(x, meta = NULL) {
 }
 
 #' @eval codedoc::pkg_doc_fun(
-#'   "stabli::as.stat_table_list.list", 
+#'   "stabli::as.stat_table_list.list",
 #'   "stat_table_list"
 #')
 as.stat_table_list.list <- function(x, meta = NULL) {
@@ -149,7 +149,7 @@ stat_table_list_assert <- function(
 #'   "stat_table_list"
 #' )
 #' @examples
-#' 
+#'
 #' # "[.stat_table_list"
 #' stl <- stabli::stat_table_list(
 #'   list(

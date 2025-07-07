@@ -2,7 +2,7 @@ Type: Package
 Package: stabli
 Title: Statistical Tables and Lists Thereof
 Version: 0.2.0
-Authors@R: 
+Authors@R:
     person(
         given = "Joonas",
         family = "Miettinen",

@@ -31,7 +31,7 @@ assert_is_arg_by_style <- function(
     x,
     funs = list(dbc::report_is_NULL,
                 dbc::report_atom_is_in_set),
-    x_nm = "by_style",
+    x_nm = x_nm,
     call = call,
     assertion_type = assertion_type,
     arg_list = list(set = by_style_options())
@@ -492,6 +492,7 @@ handle_arg_by_style <- function(
   # `by_style` as-is except `by_style = NULL` causes
   # `"by_style_options()[1]"` to be returned.
   # @codedoc_comment_block stabli::handle_arg_by_style
+  #' @param by_style Passed to `stabli::assert_is_arg_by_style`.
   assert_is_arg_by_style(
     by_style,
     assertion_type = assertion_type
@@ -533,6 +534,9 @@ handle_arg_by_et_subset_et_by_style_inplace <- function(
     call <- eval(quote(match.call()), eval_env)
   }
 
+  #' @param arg_by_style_nm `[character]` (default `"by_style"`)
+  #'
+  #' Name of your stratification style argument.
   eval_env[[arg_by_style_nm]] <- handle_arg_by_style(
     by_style = eval_env[[arg_by_style_nm]],
     assertion_type = assertion_type
@@ -545,6 +549,9 @@ handle_arg_by_et_subset_et_by_style_inplace <- function(
     call = call,
     assertion_type = assertion_type
   )
+  #' @param arg_by_nm `[character]` (default `"by"`)
+  #'
+  #' Name of your stratification argument.
   eval_env[[arg_by_nm]] <- handle_arg_by(
     by = eval_env[[arg_by_nm]],
     dataset = eval_env[[dataset_nm]],

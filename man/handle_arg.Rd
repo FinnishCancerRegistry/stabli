@@ -120,6 +120,16 @@ Determines stratification:
 \item \code{list}: Combine elements into one big \code{data.table} and use that as
 stratification.
 }}
+
+\item{by_style}{Passed to \code{stabli::assert_is_arg_by_style}.}
+
+\item{arg_by_nm}{\verb{[character]} (default \code{"by"})
+
+Name of your stratification argument.}
+
+\item{arg_by_style_nm}{\verb{[character]} (default \code{"by_style"})
+
+Name of your stratification style argument.}
 }
 \description{
 Handle typical input arguments used in statistical functions.

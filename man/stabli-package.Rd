@@ -45,6 +45,15 @@ Run the numbered scripts in \verb{./dev/} to create a new release.
 }
 \section{News}{
 
+\subsection{News for version 0.4.0}{
+\subsection{stabli::handle_arg_by_et_subset_et_by_style_inplace}{
+
+\code{stabli::handle_arg_by_et_subset_et_by_style_inplace} gains argument
+\code{handle_arg_nms}.
+}
+
+}
+
 \subsection{News for version 0.3.0}{
 \subsection{stabli::assert_is_arg_by}{
 
@@ -92,6 +101,14 @@ New function \code{stabli::stat_table_make_from_expr}.
 \subsection{stabli}{
 
 First release.
+}
+
+}
+
+\subsection{News for version 0.1.0}{
+\subsection{stabli::stat_table_list_make_from_settings}{
+
+New exported fun \verb{[stabli::stat_table_list_make_from_settings]}.
 }
 
 }

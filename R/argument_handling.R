@@ -526,6 +526,7 @@ handle_arg_by_style <- function(
 #'   "handle_arg"
 #')
 handle_arg_by_et_subset_et_by_style_inplace <- function(
+  handle_arg_nms = NULL,
   dataset_nm = "dataset",
   arg_by_nm = "by",
   arg_subset_nm = "subset",
@@ -533,11 +534,15 @@ handle_arg_by_et_subset_et_by_style_inplace <- function(
   eval_env = NULL,
   calling_env = NULL,
   call = NULL,
-  assertion_type = "input"
+  assertion_type = NULL
 ) {
   # @codedoc_comment_block news("stabli::handle_arg_by_et_subset_et_by_style_inplace", "2025-07-08", "0.3.0")
   # New function `stabli::handle_arg_by_et_subset_et_by_style_inplace`.
   # @codedoc_comment_block news("stabli::handle_arg_by_et_subset_et_by_style_inplace", "2025-07-08", "0.3.0")
+  # @codedoc_comment_block news("stabli::handle_arg_by_et_subset_et_by_style_inplace", "2025-07-08", "0.4.0")
+  # `stabli::handle_arg_by_et_subset_et_by_style_inplace` gains argument
+  # `handle_arg_nms`.
+  # @codedoc_comment_block news("stabli::handle_arg_by_et_subset_et_by_style_inplace", "2025-07-08", "0.4.0")
   # @codedoc_comment_block stabli::handle_arg_by_et_subset_et_by_style_inplace
   # `stabli::handle_arg_by_et_subset_et_by_style_inplace` calls
   # `stabli::handle_arg_by`, `stabli::handle_arg_by_style`, and
@@ -545,6 +550,22 @@ handle_arg_by_et_subset_et_by_style_inplace <- function(
   # so by default e.g. your `subset` object is replaced by output of
   # `stabli::handle_arg_subset`.
   # @codedoc_comment_block stabli::handle_arg_by_et_subset_et_by_style_inplace
+  #' @param handle_arg_nms `[NULL, character]` (default `NULL`)
+  #'
+  #' Names of arguments to handle.
+  #'
+  #' - `NULL`: Handle all, i.e. `c("by", "by_style", "subset")`.
+  #' - `character`: Handle only these, subset of
+  #'   `c("by", "by_style", "subset")`.
+  dbc::assert_is_one_of(
+    handle_arg_nms,
+    funs = list(dbc::report_is_NULL,
+                dbc::report_vector_elems_are_in_set),
+    arg_list = list(set = c("by", "by_style", "subset"))
+  )
+  if (is.null(handle_arg_nms)) {
+    handle_arg_nms <- c("by", "by_style", "subset")
+  }
   if (is.null(eval_env)) {
     eval_env <- parent.frame(1L)
   }
@@ -555,27 +576,33 @@ handle_arg_by_et_subset_et_by_style_inplace <- function(
     call <- eval(quote(match.call()), eval_env)
   }
 
-  #' @param arg_by_style_nm `[character]` (default `"by_style"`)
-  #'
-  #' Name of your stratification style argument.
-  eval_env[[arg_by_style_nm]] <- handle_arg_by_style(
-    by_style = eval_env[[arg_by_style_nm]],
-    assertion_type = assertion_type
-  )
-  eval_env[[arg_subset_nm]] <- handle_arg_subset(
-    arg_subset_nm = arg_subset_nm,
-    dataset_nm = dataset_nm,
-    eval_env = eval_env,
-    calling_env = calling_env,
-    call = call,
-    assertion_type = assertion_type
-  )
-  #' @param arg_by_nm `[character]` (default `"by"`)
-  #'
-  #' Name of your stratification argument.
-  eval_env[[arg_by_nm]] <- handle_arg_by(
-    by = eval_env[[arg_by_nm]],
-    dataset = eval_env[[dataset_nm]],
-    assertion_type = assertion_type
-  )
+  if ("by_style" %in% handle_arg_nms) {
+    #' @param arg_by_style_nm `[character]` (default `"by_style"`)
+    #'
+    #' Name of your stratification style argument.
+    eval_env[[arg_by_style_nm]] <- handle_arg_by_style(
+      by_style = eval_env[[arg_by_style_nm]],
+      assertion_type = assertion_type
+    )
+  }
+  if ("subset" %in% handle_arg_nms) {
+    eval_env[[arg_subset_nm]] <- handle_arg_subset(
+      arg_subset_nm = arg_subset_nm,
+      dataset_nm = dataset_nm,
+      eval_env = eval_env,
+      calling_env = calling_env,
+      call = call,
+      assertion_type = assertion_type
+    )
+  }
+  if ("by" %in% handle_arg_nms) {
+    #' @param arg_by_nm `[character]` (default `"by"`)
+    #'
+    #' Name of your stratification argument.
+    eval_env[[arg_by_nm]] <- handle_arg_by(
+      by = eval_env[[arg_by_nm]],
+      dataset = eval_env[[dataset_nm]],
+      assertion_type = assertion_type
+    )
+  }
 }

@@ -44,6 +44,7 @@ handle_arg_by(by, dataset, assertion_type = NULL)
 handle_arg_by_style(by_style, assertion_type = NULL)
 
 handle_arg_by_et_subset_et_by_style_inplace(
+  handle_arg_nms = NULL,
   dataset_nm = "dataset",
   arg_by_nm = "by",
   arg_subset_nm = "subset",
@@ -51,7 +52,7 @@ handle_arg_by_et_subset_et_by_style_inplace(
   eval_env = NULL,
   calling_env = NULL,
   call = NULL,
-  assertion_type = "input"
+  assertion_type = NULL
 )
 }
 \arguments{
@@ -122,6 +123,15 @@ stratification.
 }}
 
 \item{by_style}{Passed to \code{stabli::assert_is_arg_by_style}.}
+
+\item{handle_arg_nms}{\verb{[NULL, character]} (default \code{NULL})
+
+Names of arguments to handle.
+\itemize{
+\item \code{NULL}: Handle all, i.e. \code{c("by", "by_style", "subset")}.
+\item \code{character}: Handle only these, subset of
+\code{c("by", "by_style", "subset")}.
+}}
 
 \item{arg_by_nm}{\verb{[character]} (default \code{"by"})
 
@@ -253,5 +263,12 @@ New function \code{stabli::handle_arg_by_style}.
 
 
 New function \code{stabli::handle_arg_by_et_subset_et_by_style_inplace}.
+}
+
+\section{News for version 0.4.0}{
+
+
+\code{stabli::handle_arg_by_et_subset_et_by_style_inplace} gains argument
+\code{handle_arg_nms}.
 }
 

@@ -3,13 +3,8 @@ Package: stabli
 Title: Statistical Tables and Lists Thereof
 Version: 0.2.0
 Authors@R:
-    person(
-        given = "Joonas",
-        family = "Miettinen",
-        email = "joonas.miettinen@cancer.fi",
-        role = c("aut", "cre"),
-        comment = c(ORCID = "0000-0001-8624-6754")
-    )
+    person("Joonas", "Miettinen", , "joonas.miettinen@cancer.fi", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-8624-6754"))
 Description: Create and make use of a more formal definition of a table of
     statistics. Store metadata such as the names of stratifying and value
     columns into the object itself so you don't have to keep track
@@ -21,9 +16,9 @@ Imports:
 Suggests:
     codedoc,
     roxygen2
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
 Remotes:
     github::FinnishCancerRegistry/codedoc@release,
     github::FinnishCancerRegistry/dbc@release
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2

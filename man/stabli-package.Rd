@@ -45,6 +45,49 @@ Run the numbered scripts in \verb{./dev/} to create a new release.
 }
 \section{News}{
 
+\subsection{News for version 0.3.0}{
+\subsection{stabli::assert_is_arg_by}{
+
+New function \code{stabli::assert_is_arg_by}.
+}
+
+\subsection{stabli::assert_is_arg_by_style}{
+
+New function \code{stabli::assert_is_arg_by_style}.
+}
+
+\subsection{stabli::assert_is_arg_subset}{
+
+New function \code{stabli::assert_is_arg_subset}.
+}
+
+\subsection{stabli::handle_arg_by}{
+
+New function \code{stabli::handle_arg_by}.
+}
+
+\subsection{stabli::handle_arg_by_et_subset_et_by_style_inplace}{
+
+New function \code{stabli::handle_arg_by_et_subset_et_by_style_inplace}.
+}
+
+\subsection{stabli::handle_arg_by_style}{
+
+New function \code{stabli::handle_arg_by_style}.
+}
+
+\subsection{stabli::handle_arg_subset}{
+
+New function \code{stabli::handle_arg_subset}.
+}
+
+\subsection{stabli::stat_table_make_from_expr}{
+
+New function \code{stabli::stat_table_make_from_expr}.
+}
+
+}
+
 \subsection{News for version 0.2.0}{
 \subsection{stabli}{
 

@@ -10,6 +10,7 @@ NULL
 #'   "stat_table_make"
 #' )
 #' @examples
+#'
 #' # stabli::stat_table_make_from_expr
 #' my_stat_fun_1 <- function(
 #'   x,
@@ -58,6 +59,24 @@ NULL
 #'     meta_expr = quote(list(
 #'       stratum_col_nms = c(names(by), "interval_no"),
 #'       value_col_nms = c("n", "d")
+#'     )),
+#'     dataset_nm = "x"
+#'   )
+#'   return(out[])
+#' }
+#'
+#' # If you don't want subsetting feature for some reason
+#' my_stat_fun_3 <- function(
+#'   x,
+#'   by = NULL
+#' ) {
+#'   subset <- NULL
+#'   subset_style <- NULL
+#'   out <- stabli:::stat_table_make_from_expr(
+#'     expr = quote(list(n = .N, mu = mean(b))),
+#'     meta_expr = quote(list(
+#'       stratum_col_nms = as.character(names(by)),
+#'       value_col_nms = c("n", "mu")
 #'     )),
 #'     dataset_nm = "x"
 #'   )
@@ -116,6 +135,12 @@ NULL
 #'   by_style = "keep_empty"
 #' )
 #' stopifnot(nrow(st_6) == 6 * 5)
+#'
+#' st_7 <- my_stat_fun_3(
+#'   x = my_dataset,
+#'   by = "a"
+#' )
+#' stopifnot(nrow(st_7) == 5)
 stat_table_make_from_expr <- function(
   expr,
   meta_expr = NULL,
@@ -126,6 +151,9 @@ stat_table_make_from_expr <- function(
   eval_env = NULL,
   calling_env = NULL
 ) {
+  # @codedoc_comment_block news("stabli::stat_table_make_from_expr", "2025-07-08", "0.3.0")
+  # New function `stabli::stat_table_make_from_expr`.
+  # @codedoc_comment_block news("stabli::stat_table_make_from_expr", "2025-07-08", "0.3.0")
   #' @param expr `[name, call]` (no default)
   #'
   #' An R expression to evaluate for one stratum in your dataset.

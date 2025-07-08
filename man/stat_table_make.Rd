@@ -67,7 +67,14 @@ metadata. The resulting \code{stat_table} is returned.
 }
 }
 
+\section{News for version 0.3.0}{
+
+
+New function \code{stabli::stat_table_make_from_expr}.
+}
+
 \examples{
+
 # stabli::stat_table_make_from_expr
 my_stat_fun_1 <- function(
   x,
@@ -116,6 +123,24 @@ my_stat_fun_2 <- function(
     meta_expr = quote(list(
       stratum_col_nms = c(names(by), "interval_no"),
       value_col_nms = c("n", "d")
+    )),
+    dataset_nm = "x"
+  )
+  return(out[])
+}
+
+# If you don't want subsetting feature for some reason
+my_stat_fun_3 <- function(
+  x,
+  by = NULL
+) {
+  subset <- NULL
+  subset_style <- NULL
+  out <- stabli:::stat_table_make_from_expr(
+    expr = quote(list(n = .N, mu = mean(b))),
+    meta_expr = quote(list(
+      stratum_col_nms = as.character(names(by)),
+      value_col_nms = c("n", "mu")
     )),
     dataset_nm = "x"
   )
@@ -174,4 +199,10 @@ st_6 <- my_stat_fun_2(
   by_style = "keep_empty"
 )
 stopifnot(nrow(st_6) == 6 * 5)
+
+st_7 <- my_stat_fun_3(
+  x = my_dataset,
+  by = "a"
+)
+stopifnot(nrow(st_7) == 5)
 }

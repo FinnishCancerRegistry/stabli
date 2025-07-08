@@ -225,3 +225,33 @@ so by default e.g. your \code{subset} object is replaced by output of
 \code{stabli::handle_arg_subset}.
 }
 
+\section{News for version 0.3.0}{
+
+
+New function \code{stabli::assert_is_arg_by_style}.
+
+
+
+New function \code{stabli::assert_is_arg_subset}.
+
+
+
+New function \code{stabli::assert_is_arg_by}.
+
+
+
+New function \code{stabli::handle_arg_subset}.
+
+
+
+New function \code{stabli::handle_arg_by}.
+
+
+
+New function \code{stabli::handle_arg_by_style}.
+
+
+
+New function \code{stabli::handle_arg_by_et_subset_et_by_style_inplace}.
+}
+

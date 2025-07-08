@@ -17,6 +17,9 @@ assert_is_arg_by_style <- function(
   call = NULL,
   assertion_type = NULL
 ) {
+  # @codedoc_comment_block news("stabli::assert_is_arg_by_style", "2025-07-08", "0.3.0")
+  # New function `stabli::assert_is_arg_by_style`.
+  # @codedoc_comment_block news("stabli::assert_is_arg_by_style", "2025-07-08", "0.3.0")
   #' @param x Object to inspect.
   #' @param x_nm See `[dbc::handle_args_inplace]`.
   #' @param call See `[dbc::handle_args_inplace]`.
@@ -50,6 +53,9 @@ assert_is_arg_subset <- function(
   assertion_type = NULL,
   dataset = NULL
 ) {
+  # @codedoc_comment_block news("stabli::assert_is_arg_subset", "2025-07-08", "0.3.0")
+  # New function `stabli::assert_is_arg_subset`.
+  # @codedoc_comment_block news("stabli::assert_is_arg_subset", "2025-07-08", "0.3.0")
   dbc::handle_args_inplace()
   # @codedoc_comment_block stabli::assert_is_arg_subset
   # `stabli::assert_is_arg_subset` performs assertions on its input.
@@ -124,6 +130,9 @@ assert_is_arg_by <- function(
   assertion_type = NULL,
   dataset = NULL
 ) {
+  # @codedoc_comment_block news("stabli::assert_is_arg_by", "2025-07-08", "0.3.0")
+  # New function `stabli::assert_is_arg_by`.
+  # @codedoc_comment_block news("stabli::assert_is_arg_by", "2025-07-08", "0.3.0")
   # @codedoc_comment_block stabli::assert_is_arg_by
   # `stabli::assert_is_arg_by` performs assertions on its input:
   #
@@ -238,6 +247,9 @@ handle_arg_subset <- function(
   call = NULL,
   assertion_type = NULL
 ) {
+  # @codedoc_comment_block news("stabli::handle_arg_subset", "2025-07-08", "0.3.0")
+  # New function `stabli::handle_arg_subset`.
+  # @codedoc_comment_block news("stabli::handle_arg_subset", "2025-07-08", "0.3.0")
   #' @param eval_env `[NULL, environment]` (default `NULL`)
   #'
   #' Environment where the subset argument and dataset reside.
@@ -433,6 +445,9 @@ handle_arg_by <- function(
   dataset,
   assertion_type = NULL
 ) {
+  # @codedoc_comment_block news("stabli::handle_arg_by", "2025-07-08", "0.3.0")
+  # New function `stabli::handle_arg_by`.
+  # @codedoc_comment_block news("stabli::handle_arg_by", "2025-07-08", "0.3.0")
   # @codedoc_comment_block stabli::handle_arg_by
   # `stabli::handle_arg_by` turns various types of input into a single
   # `data.table` containing strata in a dataset. Performs the following steps:
@@ -487,6 +502,9 @@ handle_arg_by_style <- function(
   by_style,
   assertion_type = NULL
 ) {
+  # @codedoc_comment_block news("stabli::handle_arg_by_style", "2025-07-08", "0.3.0")
+  # New function `stabli::handle_arg_by_style`.
+  # @codedoc_comment_block news("stabli::handle_arg_by_style", "2025-07-08", "0.3.0")
   # @codedoc_comment_block stabli::handle_arg_by_style
   # `stabli::handle_arg_by_style` runs assertions on `by_style`. It returns
   # `by_style` as-is except `by_style = NULL` causes
@@ -517,6 +535,9 @@ handle_arg_by_et_subset_et_by_style_inplace <- function(
   call = NULL,
   assertion_type = "input"
 ) {
+  # @codedoc_comment_block news("stabli::handle_arg_by_et_subset_et_by_style_inplace", "2025-07-08", "0.3.0")
+  # New function `stabli::handle_arg_by_et_subset_et_by_style_inplace`.
+  # @codedoc_comment_block news("stabli::handle_arg_by_et_subset_et_by_style_inplace", "2025-07-08", "0.3.0")
   # @codedoc_comment_block stabli::handle_arg_by_et_subset_et_by_style_inplace
   # `stabli::handle_arg_by_et_subset_et_by_style_inplace` calls
   # `stabli::handle_arg_by`, `stabli::handle_arg_by_style`, and

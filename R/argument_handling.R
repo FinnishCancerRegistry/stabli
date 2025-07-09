@@ -443,11 +443,15 @@ level_space_list_to_level_space_data_table <- function(
 handle_arg_by <- function(
   by,
   dataset,
+  stratification_vame = NULL,
   assertion_type = NULL
 ) {
   # @codedoc_comment_block news("stabli::handle_arg_by", "2025-07-08", "0.3.0")
   # New function `stabli::handle_arg_by`.
   # @codedoc_comment_block news("stabli::handle_arg_by", "2025-07-08", "0.3.0")
+  # @codedoc_comment_block news("stabli::handle_arg_by", "2025-07-08", "0.4.0")
+  # `stabli::handle_arg_by` gains argument `stratification_vame`.
+  # @codedoc_comment_block news("stabli::handle_arg_by", "2025-07-08", "0.4.0")
   # @codedoc_comment_block stabli::handle_arg_by
   # `stabli::handle_arg_by` turns various types of input into a single
   # `data.table` containing strata in a dataset. Performs the following steps:
@@ -472,16 +476,39 @@ handle_arg_by <- function(
     # @codedoc_comment_block stabli::handle_arg_by
   } else if (is.character(by)) {
     # @codedoc_comment_block stabli::handle_arg_by
-    # - If `by` is a `character` vector, collect those columns from `dataset`
-    #   into a `data.table`. Drop duplicated strata.
+    # - If `by` is a `character` vector:
     # @codedoc_comment_block stabli::handle_arg_by
     stratum_col_nms <- by
-    by_expr <- quote(
-      unique(x = dataset[j = .SD, .SDcols = stratum_col_nms],
-             by = stratum_col_nms)
-    )
-    by <- eval(by_expr)
-    data.table::setkeyv(by, stratum_col_nms)
+    if (
+      inherits(stratification_vame, "VariableMetadata") &&
+        all(by %in% stratification_vame@var_meta_get_all("var_nm"))
+    ) {
+      #' @param stratification_vame `[VariableMetadata, NULL]` (default `NULL`)
+      #'
+      #' Optional `VariableMetadata` object which can be used to determine
+      #' `by` in case columns names were supplied.
+      #'
+      #' - `NULL`: This feature not used.
+      #' - `VariableMetadata`: `stratification_vame@vame_category_space_dt`
+      #'   can be called on `character`-class `by`.
+      # @codedoc_comment_block stabli::handle_arg_by
+      #   + If `!is.null(stratification_vame)` and all the column names `by`
+      #     are known by it, call
+      #     `stratification_vame@vame_category_space_dt(var_nms = by)`.
+      # @codedoc_comment_block stabli::handle_arg_by
+      by <- stratification_vame@vame_category_space_dt(var_nms = by)
+    } else {
+      # @codedoc_comment_block stabli::handle_arg_by
+      #   + Else collect those columns from `dataset`
+      #     into a `data.table`. Drop duplicated strata.
+      # @codedoc_comment_block stabli::handle_arg_by
+      by <- dataset[
+        i = !duplicated(dataset, by = stratum_col_nms),
+        j = .SD,
+        .SDcols = stratum_col_nms
+      ]
+      data.table::setkeyv(by, stratum_col_nms)
+    }
   } else if (inherits(by, "list")) {
     # @codedoc_comment_block stabli::handle_arg_by
     # @codedoc_insert_comment_block stabli:::level_space_list_to_level_space_data_table
@@ -531,6 +558,7 @@ handle_arg_by_et_subset_et_by_style_inplace <- function(
   arg_by_nm = "by",
   arg_subset_nm = "subset",
   arg_by_style_nm = "by_style",
+  stratification_vame = NULL,
   eval_env = NULL,
   calling_env = NULL,
   call = NULL,
@@ -602,6 +630,11 @@ handle_arg_by_et_subset_et_by_style_inplace <- function(
     eval_env[[arg_by_nm]] <- handle_arg_by(
       by = eval_env[[arg_by_nm]],
       dataset = eval_env[[dataset_nm]],
+      # @codedoc_comment_block news("stabli::handle_arg_by_et_subset_et_by_style_inplace", "2025-07-08", "0.4.0")
+      # `stabli::handle_arg_by_et_subset_et_by_style_inplace` gains argument
+      # `stratification_vame`.
+      # @codedoc_comment_block news("stabli::handle_arg_by_et_subset_et_by_style_inplace", "2025-07-08", "0.4.0")
+      stratification_vame = stratification_vame,
       assertion_type = assertion_type
     )
   }

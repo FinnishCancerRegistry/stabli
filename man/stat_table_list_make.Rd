@@ -66,6 +66,10 @@ See \code{?vame::VariableMetadata}.
 See the detailed description of \code{stabli::stat_table_make_from_by_list}.
 }}
 
+\item{stratification_vame}{\verb{[VariableMetadata, NULL]} (default \code{NULL})
+
+Passed to \verb{[handle_arg_by]}.}
+
 \item{fun_nm}{\verb{[character]} (no default)
 
 Must be the name of a function, e.g. \code{"my_fun"}, \code{"mypkg::my_fun"}.
@@ -174,13 +178,10 @@ if that \code{optional_steps} element exists.
 \code{stabli::handle_arg_by}.
 Only those elements of \code{arg_list} are kept whose names are
 argument names of \code{fun_nm}.
-\item \code{arg_list[["by"]]} is turned into a
-\code{data.table} with \code{stratification_vame@vame_category_space_dt} if
-\code{stratification_vame} is not \code{NULL} and if \code{arg_list[["by"]]} was
-a vector of column names.
 \item If \code{arg_list[["by"]]} is at this point a \code{data.table} and
 contains any \code{NA} strata, those \code{NA} strata are dropped.
-\code{arg_list[["by"]]} contains \code{NA} strata at least if \code{stratification_vame}
+\code{arg_list[["by"]]} contains \code{NA} strata at least if
+\code{stratification_vame}
 allows for \code{NA} values for \code{by}.
 \item Run \code{optional_steps[["lapply_pre_stat_fun_call"]](env = anon_fun_env)}
 if that \code{optional_steps} element exists.

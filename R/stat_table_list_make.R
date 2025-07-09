@@ -299,11 +299,14 @@ stat_table_make_from_by_list <- function(
       arg_list <- local({
         arg_list <- mget(c("dataset", "subset", "by", "by_style"),
                          inherits = TRUE)
+        #' @param stratification_vame `[VariableMetadata, NULL]` (default `NULL`)
+        #'
+        #' Passed to `[handle_arg_by]`.
         arg_list[["by"]] <- stabli::handle_arg_by(
           by = arg_list[["by"]],
-          dataset = arg_list[["dataset"]]
+          dataset = arg_list[["dataset"]],
+          stratification_vame = arg_list[["stratification_vame"]]
         )
-        names(arg_list) <- gsub("_", ".", names(arg_list))
         #' @param arg_list `[NULL, list]` (default `NULL`)
         #'
         #' Additional arguments to pass to function named `fun_nm`.
@@ -315,17 +318,6 @@ stat_table_make_from_by_list <- function(
         arg_list <- arg_list[
           intersect(names(arg_list), names(formals(eval(parse(text = fun_nm)))))
         ]
-        # @codedoc_comment_block stabli::stat_table_make_from_by_list
-        #     + `arg_list[["by"]]` is turned into a
-        #       `data.table` with `stratification_vame@vame_category_space_dt` if
-        #       `stratification_vame` is not `NULL` and if `arg_list[["by"]]` was
-        #       a vector of column names.
-        # @codedoc_comment_block stabli::stat_table_make_from_by_list
-        if (!is.null(stratification_vame) && is.character(arg_list[["by"]])) {
-          arg_list[["by"]] <- stratification_vame@vame_category_space_dt(
-            var_nms = arg_list[["by"]]
-          )
-        }
         stop(
           "eikö ole mitään muuta keinoa päästä NA-arvoista eroon? ",
           "olisiko rumaa tallentaa NA-arvoton kopio arvoavaruuksista ",
@@ -345,10 +337,11 @@ stat_table_make_from_by_list <- function(
         # @codedoc_comment_block stabli::stat_table_make_from_by_list
         #     + If `arg_list[["by"]]` is at this point a `data.table` and
         #       contains any `NA` strata, those `NA` strata are dropped.
-        #       `arg_list[["by"]]` contains `NA` strata at least if `stratification_vame`
+        #       `arg_list[["by"]]` contains `NA` strata at least if
+        #       `stratification_vame`
         #       allows for `NA` values for `by`.
         # @codedoc_comment_block stabli::stat_table_make_from_by_list
-        arg_list[["by"]] <- na.omit(arg_list[["by"]])
+        arg_list[["by"]] <- stats::na.omit(arg_list[["by"]])
         arg_list
       })
       # @codedoc_comment_block stabli::stat_table_make_from_by_list
@@ -371,7 +364,7 @@ stat_table_make_from_by_list <- function(
         stop(sprintf(
           paste0(
             "Output of function named `fun_nm = \"%s\"` must be of class ",
-            "`stat_table`. See ?stabli::stat_table_set",
+            "`stat_table`. See `?stabli::stat_table`",
           ),
           fun_nm
         ))

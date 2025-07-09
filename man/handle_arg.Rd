@@ -39,7 +39,7 @@ handle_arg_subset(
   assertion_type = NULL
 )
 
-handle_arg_by(by, dataset, assertion_type = NULL)
+handle_arg_by(by, dataset, stratification_vame = NULL, assertion_type = NULL)
 
 handle_arg_by_style(by_style, assertion_type = NULL)
 
@@ -49,6 +49,7 @@ handle_arg_by_et_subset_et_by_style_inplace(
   arg_by_nm = "by",
   arg_subset_nm = "subset",
   arg_by_style_nm = "by_style",
+  stratification_vame = NULL,
   eval_env = NULL,
   calling_env = NULL,
   call = NULL,
@@ -120,6 +121,16 @@ Determines stratification:
 \item \code{character}: Stratify by these columns in the dataset.
 \item \code{list}: Combine elements into one big \code{data.table} and use that as
 stratification.
+}}
+
+\item{stratification_vame}{\verb{[VariableMetadata, NULL]} (default \code{NULL})
+
+Optional \code{VariableMetadata} object which can be used to determine
+\code{by} in case columns names were supplied.
+\itemize{
+\item \code{NULL}: This feature not used.
+\item \code{VariableMetadata}: \code{stratification_vame@vame_category_space_dt}
+can be called on \code{character}-class \code{by}.
 }}
 
 \item{by_style}{Passed to \code{stabli::assert_is_arg_by_style}.}
@@ -208,8 +219,14 @@ collected as a language object (see e.g. \code{?is.call}).
 \itemize{
 \item Check \code{by} against \code{dataset} using \code{stabli::assert_is_arg_by}.
 \item If \code{by} is a \code{data.table}, it is only checked against \code{dataset}.
-\item If \code{by} is a \code{character} vector, collect those columns from \code{dataset}
+\item If \code{by} is a \code{character} vector:
+\itemize{
+\item If \code{!is.null(stratification_vame)} and all the column names \code{by}
+are known by it, call
+\code{stratification_vame@vame_category_space_dt(var_nms = by)}.
+\item Else collect those columns from \code{dataset}
 into a \code{data.table}. Drop duplicated strata.
+}
 \item If \code{by} is a \code{list} of \code{data.table} / vector elements,
 combine its elements into one big \code{data.table}.
 The big \code{data.table} is created by first determining indices into each
@@ -268,7 +285,14 @@ New function \code{stabli::handle_arg_by_et_subset_et_by_style_inplace}.
 \section{News for version 0.4.0}{
 
 
+\code{stabli::handle_arg_by} gains argument \code{stratification_vame}.
+
+
+
 \code{stabli::handle_arg_by_et_subset_et_by_style_inplace} gains argument
 \code{handle_arg_nms}.
+
+\code{stabli::handle_arg_by_et_subset_et_by_style_inplace} gains argument
+\code{stratification_vame}.
 }
 

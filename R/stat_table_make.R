@@ -148,6 +148,7 @@ stat_table_make_from_expr <- function(
   arg_by_nm = "by",
   arg_subset_nm = "subset",
   arg_by_style_nm = "by_style",
+  stratification_vame = NULL,
   eval_env = NULL,
   calling_env = NULL
 ) {
@@ -199,7 +200,13 @@ stat_table_make_from_expr <- function(
     #' @param eval_env See `[handle_arg_by_et_subset_et_by_style_inplace]`.
     eval_env = eval_env,
     #' @param calling_env See `[handle_arg_by_et_subset_et_by_style_inplace]`.
-    calling_env = calling_env
+    calling_env = calling_env,
+    # @codedoc_comment_block news("stabli::stat_table_make_from_expr", "2025-07-08", "0.4.0")
+    # `stabli::stat_table_make_from_expr` gains argument
+    # `stratification_vame`.
+    # @codedoc_comment_block news("stabli::stat_table_make_from_expr", "2025-07-08", "0.4.0")
+    #' @param stratification_vame See `[handle_arg_by_et_subset_et_by_style_inplace]`.
+    stratification_vame = stratification_vame
   )
   # @codedoc_comment_block stabli::stat_table_make_from_expr
   # - A `data.table` expression is generated based on whether stratification

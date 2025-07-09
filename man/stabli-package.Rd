@@ -46,10 +46,27 @@ Run the numbered scripts in \verb{./dev/} to create a new release.
 \section{News}{
 
 \subsection{News for version 0.4.0}{
+\subsection{stabli::handle_arg_by}{
+
+\code{stabli::handle_arg_by} gains argument \code{stratification_vame}.
+}
+
 \subsection{stabli::handle_arg_by_et_subset_et_by_style_inplace}{
 
 \code{stabli::handle_arg_by_et_subset_et_by_style_inplace} gains argument
 \code{handle_arg_nms}.
+}
+
+\subsection{stabli::handle_arg_by_et_subset_et_by_style_inplace}{
+
+\code{stabli::handle_arg_by_et_subset_et_by_style_inplace} gains argument
+\code{stratification_vame}.
+}
+
+\subsection{stabli::stat_table_make_from_expr}{
+
+\code{stabli::stat_table_make_from_expr} gains argument
+\code{stratification_vame}.
 }
 
 }

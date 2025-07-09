@@ -2,10 +2,24 @@
 
 ## News for version 0.4.0
 
+### stabli::handle_arg_by
+
+`stabli::handle_arg_by` gains argument `stratification_vame`.
+
 ### stabli::handle_arg_by_et_subset_et_by_style_inplace
 
 `stabli::handle_arg_by_et_subset_et_by_style_inplace` gains argument
 `handle_arg_nms`.
+
+### stabli::handle_arg_by_et_subset_et_by_style_inplace
+
+`stabli::handle_arg_by_et_subset_et_by_style_inplace` gains argument
+`stratification_vame`.
+
+### stabli::stat_table_make_from_expr
+
+`stabli::stat_table_make_from_expr` gains argument
+`stratification_vame`.
 
 
 ## News for version 0.3.0

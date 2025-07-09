@@ -12,6 +12,7 @@ stat_table_make_from_expr(
   arg_by_nm = "by",
   arg_subset_nm = "subset",
   arg_by_style_nm = "by_style",
+  stratification_vame = NULL,
   eval_env = NULL,
   calling_env = NULL
 )
@@ -34,6 +35,8 @@ object. \code{NULL} causes an internally defined default to be used.}
 \item{arg_subset_nm}{See \verb{[handle_arg_by_et_subset_et_by_style_inplace]}.}
 
 \item{arg_by_style_nm}{See \verb{[handle_arg_by_et_subset_et_by_style_inplace]}.}
+
+\item{stratification_vame}{See \verb{[handle_arg_by_et_subset_et_by_style_inplace]}.}
 
 \item{eval_env}{See \verb{[handle_arg_by_et_subset_et_by_style_inplace]}.}
 
@@ -65,6 +68,13 @@ Non-default \code{meta_expr} is evaluated in \code{eval_env}.
 \item \code{stabli::stat_table_set} is called on the result with the collected
 metadata. The resulting \code{stat_table} is returned.
 }
+}
+
+\section{News for version 0.4.0}{
+
+
+\code{stabli::stat_table_make_from_expr} gains argument
+\code{stratification_vame}.
 }
 
 \section{News for version 0.3.0}{

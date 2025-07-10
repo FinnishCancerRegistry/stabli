@@ -315,11 +315,6 @@ stat_table_make_from_by_list <- function(
         #' - `list`: These arguments will be included in call to `fun_nm`.
         #'   See detailed description of steps performed to see how this works.
         arg_list_i <- c(arg_list_i, arg_list)
-        # stop(
-        #   "eikö ole mitään muuta keinoa päästä NA-arvoista eroon? ",
-        #   "olisiko rumaa tallentaa NA-arvoton kopio arvoavaruuksista ",
-        #   "vame-olioon? no kyllähän se varmaan olisi."
-        # )
         # @codedoc_comment_block design(stabli::stat_table_make_from_by_list)
         # `stabli::stat_table_make_from_by_list` is intended for making "official"
         # statistical tables. It is not meant for more exploratory statistical
@@ -422,22 +417,6 @@ stat_table_make_from_by_list <- function(
         harmo_meta <- attr(small_stat_table, "vame_harmonise_dt_meta")
         dbc::assert_prod_interim_is_list(harmo_meta)
       }
-      # stop("miten varmistan, että tuloksessa on kaikki ositemuuttujat? jos ",
-      #      "by_list sisältää vain osan ositemuuttujista mutta haluan että ",
-      #      "tuloksessa on kaikki. onko tosiaan pakko olla uusi syöte. ",
-      #      "voisiko mieluummin tehdä vaikka cd-kohtaisen vamen jonka kaikki ",
-      #      "muuttujat harmonisoidaan / luodaan.")
-      # stop("mutta en aina halua kaikkia. esim. basis pitää muuntaa mutta ",
-      #      "se ei esiinny kuin yhdessä taulussa.")
-      # stop("pitäisikö harmonisation_vame-oliossa olla merkittynä että tämä on pakollinen? ",
-      #      "var_dt$mandatory = TRUE?")
-      # stop("no miten sitten tehdään arvomuuttujien suhteen? ehkä niitä ei ",
-      #      "ollenkaan harmonisoida vamen avulla? vaan ne tilastofunktiot ",
-      #      "saa hoitaa senkin?")
-      # stop("Onko tämä nimikikkailu aivan pakollista. sotkee koodia. ",
-      #      "dg_ca_staty -> cd_ofst_hosp -> hosp aika omituisesti toteutettu. ",
-      #      "mieluummin olisi maker suoraan muuttujalle hosp, mutta esim. ",
-      #      "sex -> sex ei vissiin voi toimia. cd_sex -> sex?")
       if (!is.null(harmo_meta)) {
         stabli::stat_table_set(
           small_stat_table,

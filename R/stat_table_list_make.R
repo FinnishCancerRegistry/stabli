@@ -111,6 +111,7 @@ stat_table_list_make_from_settings <- function(
     dbc::assert_is_one_of(
       settings[["arg_list"]][[i]],
       funs = list(dbc::report_is_NULL,
+                  dbc::report_is_list,
                   dbc::report_is_unevaluated_expression)
     )
     arg_list_i <- settings[["arg_list"]][[i]]

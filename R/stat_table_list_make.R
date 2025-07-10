@@ -108,15 +108,16 @@ stat_table_list_make_from_settings <- function(
     #     must be a `list` or `NULL`. Otherwise each
     #     `settings[["arg_list"]]` element must be a `list` or `NULL`.
     # @codedoc_comment_block stabli::stat_table_list_make_from_settings
-    dbc::assert_has_one_of_classes(
+    dbc::assert_is_one_of(
       settings[["arg_list"]][[i]],
-      classes = c("list", "NULL", "character", "call", "name", "{")
+      funs = list(dbc::report_is_NULL,
+                  dbc::report_is_unevaluated_expression)
     )
     arg_list_i <- settings[["arg_list"]][[i]]
     if (is.character(arg_list_i)) {
       arg_list_i <- parse(text = arg_list_i)[[1]]
     }
-    if (inherits(arg_list_i, c("call", "name", "{"))) {
+    if (dbc::test_is_unevaluated_expression(arg_list_i)) {
       arg_list_i <- eval(arg_list_i, envir = parent.frame(1L))
     }
     if (!inherits(arg_list_i, c("list", "NULL"))) {

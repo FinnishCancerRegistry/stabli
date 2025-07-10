@@ -161,18 +161,16 @@ stat_table_make_from_expr <- function(
   #'
   #' An R expression to evaluate for one stratum in your dataset.
   #' E.g. `quote(list(n = .N, mu = mean(my_col)))`.
-  dbc::assert_has_one_of_classes(
+  dbc::assert_is_unevaluated_expression(
     expr,
-    classes = c("name", "call", "{"),
     assertion_type = "prod_input"
   )
   #' @param meta_expr `[NULL, name, call]` (default `NULL`)
   #'
   #' An R expression to evaluate which produces the `stat_table` metadata
   #' object. `NULL` causes an internally defined default to be used.
-  dbc::assert_has_one_of_classes(
+  dbc::assert_is_unevaluated_expression(
     meta_expr,
-    classes = c("NULL", "name", "call", "{"),
     assertion_type = "prod_input"
   )
   if (is.null(eval_env)) {

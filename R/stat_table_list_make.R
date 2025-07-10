@@ -374,7 +374,7 @@ stat_table_make_from_by_list <- function(
         optional_steps[["lapply_post_stat_fun_call"]](env = anon_fun_env)
       }
       harmo_meta <- NULL
-      pre_harmo_stat_table_meta <- post_harmo_stat_table_meta <-
+      pre_harmo_stat_table_meta <-
         stabli::stat_table_meta_get(small_stat_table)
       if (!is.null(harmonisation_vame)) {
         #' @param harmonisation_vame `[NULL, VariableMetadata]` (default `NULL`)
@@ -407,9 +407,6 @@ stat_table_make_from_by_list <- function(
         harmonisation_vame@vame_harmonise_dt(
           small_stat_table,
           inplace = TRUE
-        )
-        post_harmo_stat_table_meta <- stabli::stat_table_meta_get(
-          small_stat_table
         )
         # @codedoc_comment_block news("stabli::stat_table_make_from_by_list", "2025-07-09", "0.4.0")
         # `stabli::stat_table_make_from_by_list` arg `optional_steps` elem

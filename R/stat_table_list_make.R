@@ -50,7 +50,7 @@ stat_table_list_make_from_settings <- function(
   #'   `settings[["arg_list"]][i]` or `settings[["arg_list"]][[i]]` passed.
   dbc::assert_is_data_table_with_required_names(
     settings,
-    required.names = c(
+    required_names = c(
       "tab_nm", "fun_nm", "by_list", "arg_list"
     )
   )
@@ -108,22 +108,21 @@ stat_table_list_make_from_settings <- function(
     #     must be a `list` or `NULL`. Otherwise each
     #     `settings[["arg_list"]]` element must be a `list` or `NULL`.
     # @codedoc_comment_block stabli::stat_table_list_make_from_settings
-    arg_list_i <- settings[["arg_list"]][[i]]
     dbc::assert_has_one_of_classes(
-      arg_list_i,
-      classes = c("list", "NULL", "character", "call", "name")
+      settings[["arg_list"]][[i]],
+      classes = c("list", "NULL", "character", "call", "name", "{")
     )
+    arg_list_i <- settings[["arg_list"]][[i]]
     if (is.character(arg_list_i)) {
       arg_list_i <- parse(text = arg_list_i)[[1]]
     }
-    if (inherits(arg_list_i, c("call", "name"))) {
+    if (inherits(arg_list_i, c("call", "name", "{"))) {
       arg_list_i <- eval(arg_list_i, envir = parent.frame(1L))
     }
     if (!inherits(arg_list_i, c("list", "NULL"))) {
       stop(sprintf("`settings[[\"arg_list\"]][[%i]]` ", i),
            "did not evaluate into a `list` nor `NULL`.")
-    }
-    if (is.null(arg_list_i)) {
+    } else if (is.null(arg_list_i)) {
       arg_list_i <- as.list(arg_list_i)
     }
     arg_list_i[["by_list"]] <-
@@ -132,18 +131,21 @@ stat_table_list_make_from_settings <- function(
     arg_list_i[["fun_nm"]] <- settings[["fun_nm"]][i]
     arg_list_i[["harmonisation_vame"]] <- harmonisation_vame
     arg_list_i[["stratification_vame"]] <- stratification_vame
-    names(arg_list_i) <- gsub("_", ".", names(arg_list_i))
 
+    # @codedoc_comment_block news("stabli::stat_table_list_make_from_settings", "2025-07-09", "0.4.0")
+    # `stabli::stat_table_list_make_from_settings` arg `optional_steps` elem
+    # `lapply_pre_stat_fun_call` renamed to `lapply_pre_stat_table_call`.
+    # @codedoc_comment_block news("stabli::stat_table_list_make_from_settings", "2025-07-09", "0.4.0")
     # @codedoc_comment_block stabli::stat_table_list_make_from_settings
-    #   + Calls `optional_steps[["lapply_pre_stat_fun_call"]](env = lapply_fun_env)`
+    #   + Calls `optional_steps[["lapply_pre_stat_table_call"]](env = lapply_fun_env)`
     #     if that `optional_steps` element exists.
     # @codedoc_comment_block stabli::stat_table_list_make_from_settings
-    if ("lapply_pre_stat_fun_call" %in% names(optional_steps))  {
-      optional_steps[["lapply_pre_stat_fun_call"]](env = lapply_fun_env)
+    if ("lapply_pre_stat_table_call" %in% names(optional_steps))  {
+      optional_steps[["lapply_pre_stat_table_call"]](env = lapply_fun_env)
     }
 
     # @codedoc_comment_block stabli::stat_table_list_make_from_settings
-    #   + Calls `stabli::stat_table_make_from_by_list` with `arg_list`.
+    #   + Calls `stabli::stat_table_make_from_by_list` with `arg_list_i`.
     # @codedoc_comment_block stabli::stat_table_list_make_from_settings
     st <- do.call(
       stabli::stat_table_make_from_by_list,
@@ -151,19 +153,23 @@ stat_table_list_make_from_settings <- function(
       quote = TRUE
     )
 
+    # @codedoc_comment_block news("stabli::stat_table_list_make_from_settings", "2025-07-09", "0.4.0")
+    # `stabli::stat_table_list_make_from_settings` arg `optional_steps` elem
+    # `lapply_post_stat_fun_call` renamed to `lapply_post_stat_table_call`.
+    # @codedoc_comment_block news("stabli::stat_table_list_make_from_settings", "2025-07-09", "0.4.0")
     # @codedoc_comment_block stabli::stat_table_list_make_from_settings
-    #   + Calls `optional_steps[["lapply_post_stat_fun_call"]](env = lapply_fun_env)`
+    #   + Calls `optional_steps[["lapply_post_stat_table_call"]](env = lapply_fun_env)`
     #     if that `optional_steps` element exists.
     # @codedoc_comment_block stabli::stat_table_list_make_from_settings
-    if ("lapply_post_stat_fun_call" %in% names(optional_steps))  {
-      optional_steps[["lapply_post_stat_fun_call"]](env = lapply_fun_env)
+    if ("lapply_post_stat_table_call" %in% names(optional_steps))  {
+      optional_steps[["lapply_post_stat_table_call"]](env = lapply_fun_env)
     }
 
     # @codedoc_comment_block stabli::stat_table_list_make_from_settings
     #   + Asserts that the produced object is of class `stat_table`.
     #     See `[stat_table]`.
     # @codedoc_comment_block stabli::stat_table_list_make_from_settings
-    dbc::assert_inherits(x = st, required.class = "stat_table")
+    stabli::stat_table_assert(st, assertion_type = "general")
     return(st[])
   })
   # @codedoc_comment_block stabli::stat_table_list_make_from_settings
@@ -258,14 +264,10 @@ stat_table_make_from_by_list <- function(
   #' Each element is a passed in turn to function named `fun_nm`
   #' as argument `by`.
   dbc::assert_is_list(by_list)
-  complete_stat_table_meta <- list(
-    stratum_col_nms = character(0L),
-    value_col_nms = character(0L)
-  )
   # @codedoc_comment_block stabli::stat_table_make_from_by_list
   # - Run `lapply` on `by_list`. For each element
   # @codedoc_comment_block stabli::stat_table_make_from_by_list
-  dt <- lapply(
+  big_stat_table <- lapply(
     by_list,
     function(by) {
       anon_fun_env <- environment()
@@ -287,25 +289,23 @@ stat_table_make_from_by_list <- function(
         on.exit(optional_steps[["lapply_on_exit"]](env = anon_fun_env))
       }
       # @codedoc_comment_block stabli::stat_table_make_from_by_list
-      #     + Create argument list `arg_list` for calling function named
+      #     + Create argument list `arg_list_i` for calling function named
       #       `fun_nm`. It is created by collecting `dataset`, `subset`, `by`
       #       (current element of `by_list`), and
-      #       `by_style` into a list, and by appending
+      #       `by_style` into a list, and by appending argument
       #       `arg_list` to it. `by` is additionally processed by
       #       `stabli::handle_arg_by`.
-      #       Only those elements of `arg_list` are kept whose names are
-      #       argument names of `fun_nm`.
       # @codedoc_comment_block stabli::stat_table_make_from_by_list
-      arg_list <- local({
-        arg_list <- mget(c("dataset", "subset", "by", "by_style"),
-                         inherits = TRUE)
+      arg_list_i <- local({
+        arg_list_i <- mget(c("dataset", "subset", "by", "by_style"),
+                           inherits = TRUE)
         #' @param stratification_vame `[VariableMetadata, NULL]` (default `NULL`)
         #'
         #' Passed to `[handle_arg_by]`.
-        arg_list[["by"]] <- stabli::handle_arg_by(
-          by = arg_list[["by"]],
-          dataset = arg_list[["dataset"]],
-          stratification_vame = arg_list[["stratification_vame"]]
+        arg_list_i[["by"]] <- stabli::handle_arg_by(
+          by = arg_list_i[["by"]],
+          dataset = arg_list_i[["dataset"]],
+          stratification_vame = stratification_vame
         )
         #' @param arg_list `[NULL, list]` (default `NULL`)
         #'
@@ -314,15 +314,12 @@ stat_table_make_from_by_list <- function(
         #' - `NULL`: Don't pass additional arguments.
         #' - `list`: These arguments will be included in call to `fun_nm`.
         #'   See detailed description of steps performed to see how this works.
-        arg_list <- c(arg_list, arg_list)
-        arg_list <- arg_list[
-          intersect(names(arg_list), names(formals(eval(parse(text = fun_nm)))))
-        ]
-        stop(
-          "eikö ole mitään muuta keinoa päästä NA-arvoista eroon? ",
-          "olisiko rumaa tallentaa NA-arvoton kopio arvoavaruuksista ",
-          "vame-olioon? no kyllähän se varmaan olisi."
-        )
+        arg_list_i <- c(arg_list_i, arg_list)
+        # stop(
+        #   "eikö ole mitään muuta keinoa päästä NA-arvoista eroon? ",
+        #   "olisiko rumaa tallentaa NA-arvoton kopio arvoavaruuksista ",
+        #   "vame-olioon? no kyllähän se varmaan olisi."
+        # )
         # @codedoc_comment_block design(stabli::stat_table_make_from_by_list)
         # `stabli::stat_table_make_from_by_list` is intended for making "official"
         # statistical tables. It is not meant for more exploratory statistical
@@ -335,14 +332,14 @@ stat_table_make_from_by_list <- function(
         # strata from `by` of class `data.table`. It is assumed that
         # @codedoc_comment_block design(stabli::stat_table_make_from_by_list)
         # @codedoc_comment_block stabli::stat_table_make_from_by_list
-        #     + If `arg_list[["by"]]` is at this point a `data.table` and
+        #     + If `arg_list_i[["by"]]` is at this point a `data.table` and
         #       contains any `NA` strata, those `NA` strata are dropped.
-        #       `arg_list[["by"]]` contains `NA` strata at least if
+        #       `arg_list_i[["by"]]` contains `NA` strata at least if
         #       `stratification_vame`
         #       allows for `NA` values for `by`.
         # @codedoc_comment_block stabli::stat_table_make_from_by_list
-        arg_list[["by"]] <- stats::na.omit(arg_list[["by"]])
-        arg_list
+        arg_list_i[["by"]] <- stats::na.omit(arg_list_i[["by"]])
+        arg_list_i
       })
       # @codedoc_comment_block stabli::stat_table_make_from_by_list
       #     + Run `optional_steps[["lapply_pre_stat_fun_call"]](env = anon_fun_env)`
@@ -352,15 +349,15 @@ stat_table_make_from_by_list <- function(
         optional_steps[["lapply_pre_stat_fun_call"]](env = anon_fun_env)
       }
       # @codedoc_comment_block stabli::stat_table_make_from_by_list
-      #     + Run `do.call(fun_nm, arg_list, quote = TRUE)`.
+      #     + Run `do.call(fun_nm, arg_list_i, quote = TRUE)`.
       # @codedoc_comment_block stabli::stat_table_make_from_by_list
       #' @param fun_nm `[character]` (no default)
       #'
       #' Must be the name of a function, e.g. `"my_fun"`, `"mypkg::my_fun"`.
-      #' The function must return a `data.table` with the additional class
-      #' `stat_table` --- see `[stat_table_set]`.
-      sub_dt <- do.call(fun_nm, arg_list, quote = TRUE)
-      if (!inherits(sub_dt, "stat_table")) {
+      #' The function must return a `stat_table` --- see `[stat_table]`.
+      fun <- eval(parse(text = fun_nm))
+      small_stat_table <- do.call(fun, arg_list_i, quote = TRUE)
+      if (!inherits(small_stat_table, "stat_table")) {
         stop(sprintf(
           paste0(
             "Output of function named `fun_nm = \"%s\"` must be of class ",
@@ -376,8 +373,9 @@ stat_table_make_from_by_list <- function(
       if ("lapply_post_stat_fun_call" %in% names(optional_steps)) {
         optional_steps[["lapply_post_stat_fun_call"]](env = anon_fun_env)
       }
-      stat_table_meta <- attr(sub_dt, "stat_table_meta")
-      dbc::assert_prod_interim_is_list(stat_table_meta)
+      harmo_meta <- NULL
+      pre_harmo_stat_table_meta <- post_harmo_stat_table_meta <-
+        stabli::stat_table_meta_get(small_stat_table)
       if (!is.null(harmonisation_vame)) {
         #' @param harmonisation_vame `[NULL, VariableMetadata]` (default `NULL`)
         #'
@@ -387,18 +385,45 @@ stat_table_make_from_by_list <- function(
         #' - `NULL`: No harmonisation attempted.
         #' - `VariableMetadata`:
         #'   See the detailed description of `stabli::stat_table_make_from_by_list`.
+        # @codedoc_comment_block news("stabli::stat_table_make_from_by_list", "2025-07-09", "0.4.0")
+        # `stabli::stat_table_make_from_by_list` arg `optional_steps` elem
+        # gains element `lapply_pre_harmonisation_call`.
+        # @codedoc_comment_block news("stabli::stat_table_make_from_by_list", "2025-07-09", "0.4.0")
         # @codedoc_comment_block stabli::stat_table_make_from_by_list
-        #   + Call `harmonisation_vame@vame_harmonise_dt` on the
-        #     partial statistics table if `harmonisation_vame` was not `NULL`.
+        #     + If `harmonisation_vame` is not `NULL`:
+        #       * Run `optional_steps[["lapply_pre_harmonisation_call"]](env = anon_fun_env)`
+        #         if that `optional_steps` element exists.
         # @codedoc_comment_block stabli::stat_table_make_from_by_list
+        if ("lapply_pre_harmonisation_call" %in% names(optional_steps)) {
+          optional_steps[["lapply_pre_harmonisation_call"]](env = anon_fun_env)
+        }
+        # @codedoc_comment_block stabli::stat_table_make_from_by_list
+        #       * Call `harmonisation_vame@vame_harmonise_dt` on the
+        #         partial statistics table.
+        # @codedoc_comment_block stabli::stat_table_make_from_by_list
+        pre_harmo_stat_table_meta <- stabli::stat_table_meta_get(
+          small_stat_table
+        )
         harmonisation_vame@vame_harmonise_dt(
-          sub_dt,
+          small_stat_table,
           inplace = TRUE
         )
-        harmo_meta <- attr(sub_dt, "vame_harmonise_dt_meta")
+        post_harmo_stat_table_meta <- stabli::stat_table_meta_get(
+          small_stat_table
+        )
+        # @codedoc_comment_block news("stabli::stat_table_make_from_by_list", "2025-07-09", "0.4.0")
+        # `stabli::stat_table_make_from_by_list` arg `optional_steps` elem
+        # gains element `lapply_post_harmonisation_call`.
+        # @codedoc_comment_block news("stabli::stat_table_make_from_by_list", "2025-07-09", "0.4.0")
+        # @codedoc_comment_block stabli::stat_table_make_from_by_list
+        #       * Run `optional_steps[["lapply_post_harmonisation_call"]](env = anon_fun_env)`
+        #         if that `optional_steps` element exists.
+        # @codedoc_comment_block stabli::stat_table_make_from_by_list
+        if ("lapply_post_harmonisation_call" %in% names(optional_steps)) {
+          optional_steps[["lapply_post_harmonisation_call"]](env = anon_fun_env)
+        }
+        harmo_meta <- attr(small_stat_table, "vame_harmonise_dt_meta")
         dbc::assert_prod_interim_is_list(harmo_meta)
-      } else {
-        harmo_meta <- NULL
       }
       # stop("miten varmistan, että tuloksessa on kaikki ositemuuttujat? jos ",
       #      "by_list sisältää vain osan ositemuuttujista mutta haluan että ",
@@ -416,40 +441,72 @@ stat_table_make_from_by_list <- function(
       #      "dg_ca_staty -> cd_ofst_hosp -> hosp aika omituisesti toteutettu. ",
       #      "mieluummin olisi maker suoraan muuttujalle hosp, mutta esim. ",
       #      "sex -> sex ei vissiin voi toimia. cd_sex -> sex?")
-      invisible(lapply(names(stat_table_meta), function(meta_nm) {
-        meta <- stat_table_meta[[meta_nm]]
-        if (!is.null(harmo_meta)) {
-          m <- match(meta, harmo_meta[["dt_col_nms"]])
-          has_match <- !is.na(m)
-          meta[has_match] <- harmo_meta[["dt_col_nms_harmonised"]][
-            m[has_match]
-          ]
-        }
-        main_env[["complete_stat_table_meta"]][[meta_nm]] <- union(
-          main_env[["complete_stat_table_meta"]][[meta_nm]],
-          meta
+      if (!is.null(harmo_meta)) {
+        stabli::stat_table_set(
+          small_stat_table,
+          lapply(pre_harmo_stat_table_meta, function(meta_datum) {
+            if (!is.character(meta_datum)) {
+              return(meta_datum)
+            }
+            indices <- match(meta_datum, harmo_meta[["dt_col_nms"]])
+            do_replace <- !is.na(indices)
+            meta_datum[do_replace] <- harmo_meta[["dt_col_nms_harmonised"]][
+              indices[do_replace]
+            ]
+            meta_datum
+          })
         )
-      }))
-      return(sub_dt[])
+      }
+      # stat_table_meta <- stabli::stat_table_meta_get(small_stat_table)
+      # invisible(lapply(names(stat_table_meta), function(meta_nm) {
+      #   meta <- stat_table_meta[[meta_nm]]
+      #   if (!is.null(harmo_meta)) {
+      #     m <- match(meta, harmo_meta[["dt_col_nms"]])
+      #     has_match <- !is.na(m)
+      #     meta[has_match] <- harmo_meta[["dt_col_nms_harmonised"]][
+      #       m[has_match]
+      #     ]
+      #   }
+      #   main_env[["complete_stat_table_meta"]][[meta_nm]] <- union(
+      #     main_env[["complete_stat_table_meta"]][[meta_nm]],
+      #     meta
+      #   )
+      # }))
+      return(small_stat_table[])
     }
   )
-  lapply(dt, function(sub_dt) {
-    add_col_nms <- setdiff(
-      unlist(complete_stat_table_meta[c("stratum_col_nms", "value_col_nms")]),
-      names(sub_dt)
+  big_meta <- local({
+    meta_by_small_stat_table <- lapply(
+      big_stat_table,
+      stabli::stat_table_meta_get
     )
-    add_dt <- data.table::setDT(list(rep(NA, nrow(sub_dt))))
+    meta_nms <- c("stratum_col_nms", "value_col_nms")
+    big_meta <- lapply(meta_nms, function(meta_nm) {
+      unique(unlist(meta_by_small_stat_table, function(small_meta) {
+        small_meta[[meta_nm]]
+      }))
+    })
+    names(big_meta) <- meta_nms
+    big_meta
+  })
+  lapply(big_stat_table, function(small_stat_table) {
+    add_col_nms <- setdiff(
+      unlist(big_meta),
+      names(small_stat_table)
+    )
+    add_dt <- data.table::setDT(list(rep(NA, nrow(small_stat_table))))
     lapply(add_col_nms, function(add_col_nm) {
-      data.table::setnames(add_dt, add_col_nm)
       if (!is.null(harmonisation_vame)) {
         data.table::setnames(add_dt, paste0(add_col_nm, "_not_applicable"))
         add_dt <- harmonisation_vame@vame_make(
           var_nms = add_col_nm,
           data = list(df = add_dt)
         )
+      } else {
+        data.table::setnames(add_dt, add_col_nm)
       }
       data.table::set(
-        sub_dt,
+        small_stat_table,
         j = add_col_nm,
         value = add_dt
       )
@@ -457,7 +514,15 @@ stat_table_make_from_by_list <- function(
     })
     NULL
   })
-  dt <- data.table::rbindlist(dt, use.names = TRUE, fill = TRUE)
+  big_stat_table <- do.call(
+    rbind,
+    c(
+      big_stat_table,
+      use.names = TRUE,
+      fill = TRUE
+    ),
+    quote = TRUE
+  )
   # @codedoc_comment_block stabli::stat_table_make_from_by_list
   # - Run `optional_steps[["post_lapply"]](env = main_env)`
   #   if that `optional_steps` element exists.
@@ -465,23 +530,14 @@ stat_table_make_from_by_list <- function(
   if ("post_lapply" %in% names(optional_steps)) {
     optional_steps[["post_lapply"]](env = main_env)
   }
-  # @codedoc_comment_block stabli::stat_table_make_from_by_list
-  # - Call `stabli::stat_table_set`.
-  # @codedoc_comment_block stabli::stat_table_make_from_by_list
-  stabli::stat_table_set(
-    x = dt,
-    meta = list(
-      stratum_col_nms = complete_stat_table_meta[["stratum_col_nms"]],
-      value_col_nms = complete_stat_table_meta[["value_col_nms"]]
-    )
-  )
+  big_meta <- stabli::stat_table_meta_get(big_stat_table)
   data.table::setcolorder(
-    dt,
+    big_stat_table,
     intersect(c(
-      complete_stat_table_meta[["stratum_col_nms"]],
-      setdiff(names(dt), unlist(complete_stat_table_meta)),
-      complete_stat_table_meta[["value_col_nms"]]
-    ), names(dt))
+      big_meta[["stratum_col_nms"]],
+      setdiff(names(big_stat_table), unlist(big_meta)),
+      big_meta[["value_col_nms"]]
+    ), names(big_stat_table))
   )
   # @codedoc_comment_block stabli::stat_table_make_from_by_list
   #
@@ -490,5 +546,5 @@ stat_table_make_from_by_list <- function(
   # @codedoc_comment_block return(stabli::stat_table_make_from_by_list)
   # Returns a `data.table` with the additional class `stat_table`.
   # @codedoc_comment_block return(stabli::stat_table_make_from_by_list)
-  return(dt[])
+  return(big_stat_table[])
 }

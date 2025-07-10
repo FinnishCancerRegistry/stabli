@@ -73,8 +73,7 @@ Passed to \verb{[handle_arg_by]}.}
 \item{fun_nm}{\verb{[character]} (no default)
 
 Must be the name of a function, e.g. \code{"my_fun"}, \code{"mypkg::my_fun"}.
-The function must return a \code{data.table} with the additional class
-\code{stat_table} --- see \verb{[stat_table_set]}.}
+The function must return a \code{stat_table} --- see \verb{[stat_table]}.}
 
 \item{by_list}{\verb{[list]} (no default)
 
@@ -132,10 +131,10 @@ environment is the environment where
 \code{stabli::stat_table_list_make_from_settings} is called. The result of the evaluation
 must be a \code{list} or \code{NULL}. Otherwise each
 \code{settings[["arg_list"]]} element must be a \code{list} or \code{NULL}.
-\item Calls \code{optional_steps[["lapply_pre_stat_fun_call"]](env = lapply_fun_env)}
+\item Calls \code{optional_steps[["lapply_pre_stat_table_call"]](env = lapply_fun_env)}
 if that \code{optional_steps} element exists.
-\item Calls \code{stabli::stat_table_make_from_by_list} with \code{arg_list}.
-\item Calls \code{optional_steps[["lapply_post_stat_fun_call"]](env = lapply_fun_env)}
+\item Calls \code{stabli::stat_table_make_from_by_list} with \code{arg_list_i}.
+\item Calls \code{optional_steps[["lapply_post_stat_table_call"]](env = lapply_fun_env)}
 if that \code{optional_steps} element exists.
 \item Asserts that the produced object is of class \code{stat_table}.
 See \verb{[stat_table]}.
@@ -170,33 +169,55 @@ evaluation environment of the anonymous function passed to
 \code{stabli::stat_table_make_from_by_list}.
 \item Run \code{on.exit(optional_steps[["lapply_on_exit"]](env = anon_fun_env))}
 if that \code{optional_steps} element exists.
-\item Create argument list \code{arg_list} for calling function named
+\item Create argument list \code{arg_list_i} for calling function named
 \code{fun_nm}. It is created by collecting \code{dataset}, \code{subset}, \code{by}
 (current element of \code{by_list}), and
-\code{by_style} into a list, and by appending
+\code{by_style} into a list, and by appending argument
 \code{arg_list} to it. \code{by} is additionally processed by
 \code{stabli::handle_arg_by}.
-Only those elements of \code{arg_list} are kept whose names are
-argument names of \code{fun_nm}.
-\item If \code{arg_list[["by"]]} is at this point a \code{data.table} and
+\item If \code{arg_list_i[["by"]]} is at this point a \code{data.table} and
 contains any \code{NA} strata, those \code{NA} strata are dropped.
-\code{arg_list[["by"]]} contains \code{NA} strata at least if
+\code{arg_list_i[["by"]]} contains \code{NA} strata at least if
 \code{stratification_vame}
 allows for \code{NA} values for \code{by}.
 \item Run \code{optional_steps[["lapply_pre_stat_fun_call"]](env = anon_fun_env)}
 if that \code{optional_steps} element exists.
-\item Run \code{do.call(fun_nm, arg_list, quote = TRUE)}.
+\item Run \code{do.call(fun_nm, arg_list_i, quote = TRUE)}.
 \item Run \code{optional_steps[["lapply_post_stat_fun_call"]](env = anon_fun_env)}
 if that \code{optional_steps} element exists.
+\item If \code{harmonisation_vame} is not \code{NULL}:
+\itemize{
+\item Run \code{optional_steps[["lapply_pre_harmonisation_call"]](env = anon_fun_env)}
+if that \code{optional_steps} element exists.
 \item Call \code{harmonisation_vame@vame_harmonise_dt} on the
-partial statistics table if \code{harmonisation_vame} was not \code{NULL}.
+partial statistics table.
+\item Run \code{optional_steps[["lapply_post_harmonisation_call"]](env = anon_fun_env)}
+if that \code{optional_steps} element exists.
+}
 }
 \item Run \code{optional_steps[["post_lapply"]](env = main_env)}
 if that \code{optional_steps} element exists.
-\item Call \code{stabli::stat_table_set}.
 }
 
 Returns a \code{data.table} with the additional class \code{stat_table}.
+}
+
+\section{News for version 0.4.0}{
+
+
+\code{stabli::stat_table_list_make_from_settings} arg \code{optional_steps} elem
+\code{lapply_pre_stat_fun_call} renamed to \code{lapply_pre_stat_table_call}.
+
+\code{stabli::stat_table_list_make_from_settings} arg \code{optional_steps} elem
+\code{lapply_post_stat_fun_call} renamed to \code{lapply_post_stat_table_call}.
+
+
+
+\code{stabli::stat_table_make_from_by_list} arg \code{optional_steps} elem
+gains element \code{lapply_pre_harmonisation_call}.
+
+\code{stabli::stat_table_make_from_by_list} arg \code{optional_steps} elem
+gains element \code{lapply_post_harmonisation_call}.
 }
 
 \section{News for version 0.1.0}{

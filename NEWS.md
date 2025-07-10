@@ -16,6 +16,26 @@
 `stabli::handle_arg_by_et_subset_et_by_style_inplace` gains argument
 `stratification_vame`.
 
+### stabli::stat_table_list_make_from_settings
+
+`stabli::stat_table_list_make_from_settings` arg `optional_steps` elem
+`lapply_pre_stat_fun_call` renamed to `lapply_pre_stat_table_call`.
+
+### stabli::stat_table_list_make_from_settings
+
+`stabli::stat_table_list_make_from_settings` arg `optional_steps` elem
+`lapply_post_stat_fun_call` renamed to `lapply_post_stat_table_call`.
+
+### stabli::stat_table_make_from_by_list
+
+`stabli::stat_table_make_from_by_list` arg `optional_steps` elem
+gains element `lapply_pre_harmonisation_call`.
+
+### stabli::stat_table_make_from_by_list
+
+`stabli::stat_table_make_from_by_list` arg `optional_steps` elem
+gains element `lapply_post_harmonisation_call`.
+
 ### stabli::stat_table_make_from_expr
 
 `stabli::stat_table_make_from_expr` gains argument

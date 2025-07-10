@@ -63,6 +63,30 @@ Run the numbered scripts in \verb{./dev/} to create a new release.
 \code{stratification_vame}.
 }
 
+\subsection{stabli::stat_table_list_make_from_settings}{
+
+\code{stabli::stat_table_list_make_from_settings} arg \code{optional_steps} elem
+\code{lapply_pre_stat_fun_call} renamed to \code{lapply_pre_stat_table_call}.
+}
+
+\subsection{stabli::stat_table_list_make_from_settings}{
+
+\code{stabli::stat_table_list_make_from_settings} arg \code{optional_steps} elem
+\code{lapply_post_stat_fun_call} renamed to \code{lapply_post_stat_table_call}.
+}
+
+\subsection{stabli::stat_table_make_from_by_list}{
+
+\code{stabli::stat_table_make_from_by_list} arg \code{optional_steps} elem
+gains element \code{lapply_pre_harmonisation_call}.
+}
+
+\subsection{stabli::stat_table_make_from_by_list}{
+
+\code{stabli::stat_table_make_from_by_list} arg \code{optional_steps} elem
+gains element \code{lapply_post_harmonisation_call}.
+}
+
 \subsection{stabli::stat_table_make_from_expr}{
 
 \code{stabli::stat_table_make_from_expr} gains argument

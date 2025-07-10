@@ -9,138 +9,6 @@ NULL
 #'   "stabli::stat_table_make_from_expr",
 #'   "stat_table_make"
 #' )
-#' @examples
-#'
-#' # stabli::stat_table_make_from_expr
-#' my_stat_fun_1 <- function(
-#'   x,
-#'   by = NULL,
-#'   subset = NULL,
-#'   by_style = NULL
-#' ) {
-#'   out <- stabli:::stat_table_make_from_expr(
-#'     expr = quote(list(n = .N, mu = mean(b))),
-#'     meta_expr = quote(list(
-#'       stratum_col_nms = as.character(names(by)),
-#'       value_col_nms = c("n", "mu")
-#'     )),
-#'     dataset_nm = "x"
-#'   )
-#'   return(out[])
-#' }
-#' 
-#' my_stat_fun_2 <- function(
-#'   x,
-#'   by = NULL,
-#'   subset = NULL,
-#'   by_style = NULL
-#' ) {
-#'   out <- stabli:::stat_table_make_from_expr(
-#'     expr = quote({
-#'       dt <- data.table::data.table(
-#'         interval_no = 1:5,
-#'         time_lo = 0:4,
-#'         time_up = 1:5,
-#'         n = NA_integer_,
-#'         d = NA_integer_
-#'       )
-#'       if (.N > 0) {
-#'         data.table::set(
-#'           dt,
-#'           j = c("n", "d"),
-#'           value = list(
-#'             n = sample(size = 5, x = 10L, replace = TRUE),
-#'             d = sample(size = 5, x = 3L, replace = TRUE)
-#'           )
-#'         )
-#'       }
-#'       dt[]
-#'     }),
-#'     meta_expr = quote(list(
-#'       stratum_col_nms = c(names(by), "interval_no"),
-#'       value_col_nms = c("n", "d")
-#'     )),
-#'     dataset_nm = "x"
-#'   )
-#'   return(out[])
-#' }
-#'
-#' # If you don't want subsetting feature for some reason
-#' my_stat_fun_3 <- function(
-#'   x,
-#'   by = NULL
-#' ) {
-#'   subset <- NULL
-#'   subset_style <- NULL
-#'   out <- stabli:::stat_table_make_from_expr(
-#'     expr = quote(list(n = .N, mu = mean(b))),
-#'     meta_expr = quote(list(
-#'       stratum_col_nms = as.character(names(by)),
-#'       value_col_nms = c("n", "mu")
-#'     )),
-#'     dataset_nm = "x"
-#'   )
-#'   return(out[])
-#' }
-#' 
-#' my_dataset <- data.table::data.table(
-#'   a = sample(1:5, size = 1e6L, replace = TRUE)
-#' )
-#' my_dataset[j = "b" := a + runif(n = 1e6L)]
-#' 
-#' st_1 <- my_stat_fun_1(
-#'   x = my_dataset,
-#'   by = "a",
-#'   subset = data.table::data.table(a = 3:5),
-#'   by_style = "keep_empty"
-#' )
-#' stopifnot(nrow(st_1) == 5)
-#' 
-#' st_2 <- my_stat_fun_2(
-#'   x = my_dataset,
-#'   by = "a",
-#'   subset = data.table::data.table(a = 3:5),
-#'   by_style = "keep_empty"
-#' )
-#' stopifnot(nrow(st_2) == 5 * 5)
-#' 
-#' st_3 <- my_stat_fun_2(
-#'   x = my_dataset,
-#'   by = NULL,
-#'   subset = data.table::data.table(a = 3:5),
-#'   by_style = "keep_empty"
-#' )
-#' stopifnot(nrow(st_3) == 5)
-#' 
-#' st_4 <- my_stat_fun_1(
-#'   x = my_dataset,
-#'   by = NULL,
-#'   subset = data.table::data.table(a = 3:5),
-#'   by_style = "keep_empty"
-#' )
-#' stopifnot(nrow(st_4) == 1)
-#' 
-#' st_5 <- my_stat_fun_1(
-#'   x = my_dataset,
-#'   by = list(a = 1:6),
-#'   subset = data.table::data.table(a = 3:5),
-#'   by_style = "keep_empty"
-#' )
-#' stopifnot(nrow(st_5) == 6)
-#' 
-#' st_6 <- my_stat_fun_2(
-#'   x = my_dataset,
-#'   by = list(a = 1:6),
-#'   subset = data.table::data.table(a = 3:5),
-#'   by_style = "keep_empty"
-#' )
-#' stopifnot(nrow(st_6) == 6 * 5)
-#'
-#' st_7 <- my_stat_fun_3(
-#'   x = my_dataset,
-#'   by = "a"
-#' )
-#' stopifnot(nrow(st_7) == 5)
 stat_table_make_from_expr <- function(
   expr,
   meta_expr = NULL,
@@ -152,6 +20,140 @@ stat_table_make_from_expr <- function(
   eval_env = NULL,
   calling_env = NULL
 ) {
+  # @codedoc_comment_block R_package_example(stabli)
+  # @codedoc_comment_block examples(stabli::stat_table_make_from_expr)
+  # # stabli::stat_table_make_from_expr
+  # my_stat_fun_1 <- function(
+  #   x,
+  #   by = NULL,
+  #   subset = NULL,
+  #   by_style = NULL
+  # ) {
+  #   out <- stabli:::stat_table_make_from_expr(
+  #     expr = quote(list(n = .N, mu = mean(b))),
+  #     meta_expr = quote(list(
+  #       stratum_col_nms = as.character(names(by)),
+  #       value_col_nms = c("n", "mu")
+  #     )),
+  #     dataset_nm = "x"
+  #   )
+  #   return(out[])
+  # }
+  # 
+  # my_stat_fun_2 <- function(
+  #   x,
+  #   by = NULL,
+  #   subset = NULL,
+  #   by_style = NULL
+  # ) {
+  #   out <- stabli:::stat_table_make_from_expr(
+  #     expr = quote({
+  #       dt <- data.table::data.table(
+  #         interval_no = 1:5,
+  #         time_lo = 0:4,
+  #         time_up = 1:5,
+  #         n = NA_integer_,
+  #         d = NA_integer_
+  #       )
+  #       if (.N > 0) {
+  #         data.table::set(
+  #           dt,
+  #           j = c("n", "d"),
+  #           value = list(
+  #             n = sample(size = 5, x = 10L, replace = TRUE),
+  #             d = sample(size = 5, x = 3L, replace = TRUE)
+  #           )
+  #         )
+  #       }
+  #       dt[]
+  #     }),
+  #     meta_expr = quote(list(
+  #       stratum_col_nms = c(names(by), "interval_no"),
+  #       value_col_nms = c("n", "d")
+  #     )),
+  #     dataset_nm = "x"
+  #   )
+  #   return(out[])
+  # }
+  #
+  # # If you don't some args in your function
+  # my_stat_fun_3 <- function(
+  #   x,
+  #   by = NULL
+  # ) {
+  #   subset <- NULL
+  #   by_style <- NULL
+  #   out <- stabli:::stat_table_make_from_expr(
+  #     expr = quote(list(n = .N, mu = mean(b))),
+  #     meta_expr = quote(list(
+  #       stratum_col_nms = as.character(names(by)),
+  #       value_col_nms = c("n", "mu")
+  #     )),
+  #     dataset_nm = "x"
+  #   )
+  #   return(out[])
+  # }
+  # 
+  # my_dataset <- data.table::data.table(
+  #   a = sample(1:5, size = 1e6L, replace = TRUE)
+  # )
+  # my_dataset[j = "b" := a + runif(n = 1e6L)]
+  # 
+  # st_1 <- my_stat_fun_1(
+  #   x = my_dataset,
+  #   by = "a",
+  #   subset = data.table::data.table(a = 3:5),
+  #   by_style = "keep_empty"
+  # )
+  # stopifnot(nrow(st_1) == 5)
+  # 
+  # st_2 <- my_stat_fun_2(
+  #   x = my_dataset,
+  #   by = "a",
+  #   subset = data.table::data.table(a = 3:5),
+  #   by_style = "keep_empty"
+  # )
+  # stopifnot(nrow(st_2) == 5 * 5)
+  # 
+  # st_3 <- my_stat_fun_2(
+  #   x = my_dataset,
+  #   by = NULL,
+  #   subset = data.table::data.table(a = 3:5),
+  #   by_style = "keep_empty"
+  # )
+  # stopifnot(nrow(st_3) == 5)
+  # 
+  # st_4 <- my_stat_fun_1(
+  #   x = my_dataset,
+  #   by = NULL,
+  #   subset = data.table::data.table(a = 3:5),
+  #   by_style = "keep_empty"
+  # )
+  # stopifnot(nrow(st_4) == 1)
+  # 
+  # st_5 <- my_stat_fun_1(
+  #   x = my_dataset,
+  #   by = list(a = 1:6),
+  #   subset = data.table::data.table(a = 3:5),
+  #   by_style = "keep_empty"
+  # )
+  # stopifnot(nrow(st_5) == 6)
+  # 
+  # st_6 <- my_stat_fun_2(
+  #   x = my_dataset,
+  #   by = list(a = 1:6),
+  #   subset = data.table::data.table(a = 3:5),
+  #   by_style = "keep_empty"
+  # )
+  # stopifnot(nrow(st_6) == 6 * 5)
+  #
+  # st_7 <- my_stat_fun_3(
+  #   x = my_dataset,
+  #   by = "a"
+  # )
+  # stopifnot(nrow(st_7) == 5)
+  # @codedoc_comment_block examples(stabli::stat_table_make_from_expr)
+  # @codedoc_comment_block R_package_example(stabli)
   # @codedoc_comment_block news("stabli::stat_table_make_from_expr", "2025-07-08", "0.3.0")
   # New function `stabli::stat_table_make_from_expr`.
   # @codedoc_comment_block news("stabli::stat_table_make_from_expr", "2025-07-08", "0.3.0")

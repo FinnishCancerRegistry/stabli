@@ -86,6 +86,8 @@ New function \code{stabli::stat_table_make_from_expr}.
 \examples{
 
 # stabli::stat_table_make_from_expr
+
+# stabli::stat_table_make_from_expr
 my_stat_fun_1 <- function(
   x,
   by = NULL,
@@ -139,13 +141,13 @@ my_stat_fun_2 <- function(
   return(out[])
 }
 
-# If you don't want subsetting feature for some reason
+# If you don't some args in your function
 my_stat_fun_3 <- function(
   x,
   by = NULL
 ) {
   subset <- NULL
-  subset_style <- NULL
+  by_style <- NULL
   out <- stabli:::stat_table_make_from_expr(
     expr = quote(list(n = .N, mu = mean(b))),
     meta_expr = quote(list(
@@ -215,4 +217,5 @@ st_7 <- my_stat_fun_3(
   by = "a"
 )
 stopifnot(nrow(st_7) == 5)
+
 }

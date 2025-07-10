@@ -14,7 +14,6 @@ stat_table_list <- function(
   # @codedoc_comment_block stabli::stat_table_list
 
   # @codedoc_comment_block examples(stabli::stat_table_list)
-  # @codedoc_comment_block R_package_example(stabli)
   # st1 <- stabli::stat_table(
   #   data.table::data.table(a = 1:3, v = 3:1),
   #   list(
@@ -33,7 +32,6 @@ stat_table_list <- function(
   #   list(tab1 = st1, tab2 = st2),
   #   list(meta_dt = data.table::data.table(stat_fun_nm = c("fun1", "fun1")))
   # )
-  # @codedoc_comment_block R_package_example(stabli)
   # @codedoc_comment_block examples(stabli::stat_table_list)
   #' @param x `[list]` (no default)
   #'

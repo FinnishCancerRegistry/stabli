@@ -14,6 +14,12 @@
 #
 # ${paste0(read.dcf("DESCRIPTION", fields = "Description"), collapse = "\n")}
 #
+# ## Installation
+#
+# ```r
+# devtools::install_github("FinnishCancerRegistry/stabli@release")
+# ```
+#
 # ## Example
 #
 # ```r

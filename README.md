@@ -15,6 +15,12 @@ statistics. Store metadata such as the names of stratifying and value
 columns into the object itself so you don't have to keep track
 yourself.
 
+## Installation
+
+```r
+devtools::install_github("FinnishCancerRegistry/stabli@release")
+```
+
 ## Example
 
 ```r

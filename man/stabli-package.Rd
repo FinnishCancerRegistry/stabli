@@ -15,6 +15,12 @@ columns into the object itself so you don't have to keep track
 yourself.
 }
 
+\subsection{Installation}{
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{devtools::install_github("FinnishCancerRegistry/stabli@release")
+}\if{html}{\out{</div>}}
+}
+
 \subsection{Example}{
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{st1 <- stabli::stat_table(

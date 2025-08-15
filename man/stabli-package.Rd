@@ -163,6 +163,15 @@ Run the numbered scripts in \verb{./dev/} to create a new release.
 }
 \section{News}{
 
+\subsection{News for version 0.4.1}{
+\subsection{stabli::print.stat_table_list}{
+
+\code{stabli::print.stat_table_list} bug related to adding \code{stat_table}
+metadata into the printed table fixed.
+}
+
+}
+
 \subsection{News for version 0.4.0}{
 \subsection{stabli::handle_arg_by}{
 

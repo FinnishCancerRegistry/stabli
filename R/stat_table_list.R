@@ -212,7 +212,6 @@ print.stat_table_list <- function(x, ...) {
   }
   lapply(seq_along(x), function(i) {
     st <- x[[i]]
-    st_meta_list <- stat_table_meta_get(st)
     # @codedoc_comment_block stabli::print.stat_table_list
     #   + `dim`: Number of rows and columns.
     # @codedoc_comment_block stabli::print.stat_table_list
@@ -222,14 +221,19 @@ print.stat_table_list <- function(x, ...) {
       j = "dim",
       value = sprintf("(%i, %i)", nrow(st), ncol(st))
     )
+    # @codedoc_comment_block news("stabli::print.stat_table_list", "2025-08-15", "0.4.1")
+    # `stabli::print.stat_table_list` bug related to adding `stat_table`
+    # metadata into the printed table fixed.
+    # @codedoc_comment_block news("stabli::print.stat_table_list", "2025-08-15", "0.4.1")
     # @codedoc_comment_block stabli::print.stat_table_list
     #   + Every element of the metadata of the corresponding `stat_table`.
     # @codedoc_comment_block stabli::print.stat_table_list
+    st_meta_list <- stat_table_meta_get(st)
     data.table::set(
       info_dt,
       i = i,
       j = names(st_meta_list),
-      value = st_meta_list
+      value = lapply(st_meta_list, list)
     )
     return(info_dt)
   })

@@ -93,6 +93,13 @@ elements are combined with \code{c} and a call to \code{unique} to drop duplicat
 }
 }
 
+\section{News for version 0.4.1}{
+
+
+\code{stabli::print.stat_table_list} bug related to adding \code{stat_table}
+metadata into the printed table fixed.
+}
+
 \examples{
 
 # stabli::stat_table_list

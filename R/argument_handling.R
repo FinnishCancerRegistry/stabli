@@ -152,7 +152,7 @@ assert_is_arg_by <- function(
   #   `data.table`, or `NULL`. Vector elements must be named.
   # @codedoc_comment_block stabli::assert_is_arg_by
   if (inherits(x, "list")) {
-    lapply(seq_along(x), function(i) {
+    for (i in seq_along(x)) {
       dbc::assert_is_one_of(
         x = x[[i]],
         x_nm = sprintf("%s[[%i]]", x_nm, i),
@@ -177,7 +177,7 @@ assert_is_arg_by <- function(
           ), x_nm, x_nm), call = call))
         }
       }
-    })
+    }
   }
   if (!is.null(dataset)) {
     if (inherits(x, "data.table")) {

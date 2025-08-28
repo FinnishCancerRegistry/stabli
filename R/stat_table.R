@@ -400,7 +400,7 @@ rbind.stat_table <- function(...) {
     )
     NULL
   })
-  out <- do.call(rbind, al)
+  out <- call_with_arg_list(rbind, al)
   # @codedoc_comment_block stabli::rbind.stat_table
   # - Sets attributes.
   # - Returns a proper `stat_table`.

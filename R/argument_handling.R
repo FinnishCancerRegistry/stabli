@@ -405,7 +405,7 @@ level_space_list_to_level_space_data_table <- function(
   #   values are added into the big `data.table`.
   # @codedoc_comment_block stabli:::level_space_list_to_level_space_data_table
   x[vapply(x, is.null, logical(1L))] <- NULL
-  dt <- do.call(data.table::CJ, lapply(seq_along(x), function(i) {
+  dt <- call_with_arg_list(data.table::CJ, lapply(seq_along(x), function(i) {
     if (data.table::is.data.table(x[[i]])) {
       seq_len(nrow(x[[i]]))
     } else {

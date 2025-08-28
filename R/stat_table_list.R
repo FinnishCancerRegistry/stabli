@@ -326,7 +326,7 @@ c.stat_table_list <- function(...) {
       if (meta_nm == "meta_dt") {
         data.table::rbindlist(one_meta_by_i)
       } else {
-        unique(do.call(c, one_meta_by_i))
+        unique(call_with_arg_list(c, one_meta_by_i))
       }
     })
     names(meta) <- meta_nms
@@ -336,7 +336,7 @@ c.stat_table_list <- function(...) {
     out_meta,
     assertion_type = "prod_interim"
   )
-  out <- do.call(c, out)
+  out <- call_with_arg_list(c, out)
 
   # @codedoc_comment_block stabli::c.stat_table_list
   # - Call `stabli::stat_table_list_set` using collected data and metadata.

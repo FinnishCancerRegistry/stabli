@@ -149,10 +149,9 @@ stat_table_list_make_from_settings <- function(
     # @codedoc_comment_block stabli::stat_table_list_make_from_settings
     #   + Calls `stabli::stat_table_make_from_by_list` with `arg_list_i`.
     # @codedoc_comment_block stabli::stat_table_list_make_from_settings
-    st <- do.call(
-      stabli::stat_table_make_from_by_list,
-      arg_list_i,
-      quote = TRUE
+    st <- call_with_arg_list(
+      fun = stabli::stat_table_make_from_by_list,
+      arg_list = arg_list_i
     )
 
     # @codedoc_comment_block news("stabli::stat_table_list_make_from_settings", "2025-07-09", "0.4.0")
@@ -346,14 +345,13 @@ stat_table_make_from_by_list <- function(
         optional_steps[["lapply_pre_stat_fun_call"]](env = anon_fun_env)
       }
       # @codedoc_comment_block stabli::stat_table_make_from_by_list
-      #     + Run `do.call(fun_nm, arg_list_i, quote = TRUE)`.
+      #     + Call function named `fun_nm` using `arg_list_i`.
       # @codedoc_comment_block stabli::stat_table_make_from_by_list
       #' @param fun_nm `[character]` (no default)
       #'
       #' Must be the name of a function, e.g. `"my_fun"`, `"mypkg::my_fun"`.
       #' The function must return a `stat_table` --- see `[stat_table]`.
-      fun <- eval(parse(text = fun_nm))
-      small_stat_table <- do.call(fun, arg_list_i, quote = TRUE)
+      small_stat_table <- call_with_arg_list(fun_nm, arg_list_i)
       if (!inherits(small_stat_table, "stat_table")) {
         stop(sprintf(
           paste0(
@@ -492,14 +490,13 @@ stat_table_make_from_by_list <- function(
     })
     NULL
   })
-  big_stat_table <- do.call(
+  big_stat_table <- call_with_arg_list(
     rbind,
     c(
       big_stat_table,
       use.names = TRUE,
       fill = TRUE
-    ),
-    quote = TRUE
+    )
   )
   # @codedoc_comment_block stabli::stat_table_make_from_by_list
   # - Run `optional_steps[["post_lapply"]](env = main_env)`

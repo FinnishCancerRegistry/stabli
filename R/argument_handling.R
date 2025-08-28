@@ -658,7 +658,7 @@ assert_is_arg_by_list <- function(
   for (i in seq_along(x)) {
     assert_is_arg_by(
       x = x[[i]],
-      x_nm = sprintf("x[[%i]]", i),
+      x_nm = sprintf("%s[[%i]]", x_nm, i),
       call = call,
       assertion_type = assertion_type,
       dataset = dataset

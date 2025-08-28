@@ -473,6 +473,7 @@ handle_arg_by <- function(
     # @codedoc_comment_block stabli::handle_arg_by
     # - If `by` is a `data.table`, it is only checked against `dataset`.
     # @codedoc_comment_block stabli::handle_arg_by
+    # ... by assert_is_arg_by above
   } else if (is.character(by)) {
     # @codedoc_comment_block stabli::handle_arg_by
     # - If `by` is a `character` vector:
@@ -637,4 +638,30 @@ handle_arg_by_et_subset_et_by_style_inplace <- function(
       assertion_type = assertion_type
     )
   }
+}
+
+assert_is_arg_by_list <- function(
+  x,
+  x_nm = NULL,
+  call = NULL,
+  assertion_type = NULL,
+  dataset = NULL
+) {
+  dbc::handle_args_inplace()
+  dbc::assert_is_list(
+    x,
+    x_nm = x_nm,
+    call = call,
+    assertion_type = assertion_type
+  )
+  for (i in seq_along(x)) {
+    assert_is_arg_by(
+      x = x[[i]],
+      x_nm = sprintf("x[[%i]]", i),
+      call = call,
+      assertion_type = assertion_type,
+      dataset = dataset
+    )
+  }
+  return(invisible(NULL))
 }

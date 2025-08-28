@@ -356,7 +356,7 @@ stat_table_make_from_by_list <- function(
   #'
   #' Each element is a passed in turn to function named `fun_nm`
   #' as argument `by`.
-  dbc::assert_is_list(by_list)
+  assert_is_arg_by_list(by_list, dataset = dataset)
   # @codedoc_comment_block stabli::stat_table_make_from_by_list
   # - Run `lapply` on `by_list`. For each element
   # @codedoc_comment_block stabli::stat_table_make_from_by_list

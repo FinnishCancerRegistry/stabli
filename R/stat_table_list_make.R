@@ -66,6 +66,13 @@ stat_table_list_make_from_settings <- function(
   dbc::assert_is_list(
     settings[["by_list"]]
   )
+  for (i in seq_len(nrow(settings))) {
+    assert_is_arg_by_list(
+      x = settings[["by_list"]][[i]],
+      x_nm = sprintf("settings[[\"by_list\"]][[%i]]", i)
+    )
+  }
+  rm(list = "i")
   dbc::assert_is_one_of(
     settings[["arg_list"]],
     funs = list(dbc::report_is_character_nonNA_vector,

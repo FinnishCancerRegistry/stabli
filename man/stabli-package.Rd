@@ -163,6 +163,15 @@ Run the numbered scripts in \verb{./dev/} to create a new release.
 }
 \section{News}{
 
+\subsection{News for version 1.0.0}{
+\subsection{fcrcore::call_with_arg_list}{
+
+\verb{[fcrcore::call_with_arg_list]} argument \code{arg_list} handling robustified,
+now tolerates a list of length zero.
+}
+
+}
+
 \subsection{News for version 0.4.1}{
 \subsection{stabli::print.stat_table_list}{
 

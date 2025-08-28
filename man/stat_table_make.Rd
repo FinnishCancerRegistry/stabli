@@ -3,6 +3,7 @@
 \name{stat_table_make}
 \alias{stat_table_make}
 \alias{stat_table_make_from_expr}
+\alias{stat_table_make_from_by_list}
 \title{Make \code{stat_table}}
 \usage{
 stat_table_make_from_expr(
@@ -15,6 +16,18 @@ stat_table_make_from_expr(
   stratification_vame = NULL,
   eval_env = NULL,
   calling_env = NULL
+)
+
+stat_table_make_from_by_list(
+  fun_nm,
+  dataset,
+  by_list,
+  subset = NULL,
+  by_style = NULL,
+  arg_list = NULL,
+  optional_steps = NULL,
+  harmonisation_vame = NULL,
+  stratification_vame = NULL
 )
 }
 \arguments{
@@ -36,11 +49,59 @@ object. \code{NULL} causes an internally defined default to be used.}
 
 \item{arg_by_style_nm}{See \verb{[handle_arg_by_et_subset_et_by_style_inplace]}.}
 
-\item{stratification_vame}{See \verb{[handle_arg_by_et_subset_et_by_style_inplace]}.}
+\item{stratification_vame}{\verb{[VariableMetadata, NULL]} (default \code{NULL})
+
+Passed to \verb{[handle_arg_by]}.}
 
 \item{eval_env}{See \verb{[handle_arg_by_et_subset_et_by_style_inplace]}.}
 
 \item{calling_env}{See \verb{[handle_arg_by_et_subset_et_by_style_inplace]}.}
+
+\item{fun_nm}{\verb{[character]} (no default)
+
+Must be the name of a function, e.g. \code{"my_fun"}, \code{"mypkg::my_fun"}.
+The function must return a \code{stat_table} --- see \verb{[stat_table]}.}
+
+\item{by_list}{\verb{[list]} (no default)
+
+Each element is a passed in turn to function named \code{fun_nm}
+as argument \code{by}.}
+
+\item{subset}{Handled by \verb{[handle_arg_by_et_subset_et_by_style_inplace]}.}
+
+\item{by_style}{Handled by \verb{[handle_arg_by_et_subset_et_by_style_inplace]}.}
+
+\item{arg_list}{\verb{[NULL, list]} (default \code{NULL})
+
+Additional arguments to pass to function named \code{fun_nm}.
+\itemize{
+\item \code{NULL}: Don't pass additional arguments.
+\item \code{list}: These arguments will be included in call to \code{fun_nm}.
+See detailed description of steps performed to see how this works.
+}}
+
+\item{optional_steps}{\verb{[NULL, list]} (default \code{NULL})
+\itemize{
+\item \code{NULL}: No additional optional steps are run.
+\item \code{list}: This named list of functions is used to perform optional steps
+during run. See detailed description of steps performed by function
+to see how this can be used.
+}}
+
+\item{harmonisation_vame}{\verb{[NULL, VariableMetadata]} (default \code{NULL})
+
+Contains metadata for harmonising results.
+See \code{?vame::VariableMetadata}.
+\itemize{
+\item \code{NULL}: No harmonisation attempted.
+\item \code{VariableMetadata}:
+See the detailed description of \code{stabli::stat_table_make_from_by_list}.
+}}
+}
+\value{
+\strong{stabli::stat_table_make_from_by_list}
+
+Returns a \code{data.table} with the additional class \code{stat_table}.
 }
 \description{
 Functions to make it easy to write functions which produce \code{stat_table}
@@ -68,6 +129,60 @@ Non-default \code{meta_expr} is evaluated in \code{eval_env}.
 \item \code{stabli::stat_table_set} is called on the result with the collected
 metadata. The resulting \code{stat_table} is returned.
 }
+
+
+\strong{stabli::stat_table_make_from_by_list}
+
+\code{stabli::stat_table_make_from_by_list} performs the following steps:
+\itemize{
+\item Run \code{optional_steps[["on_entry"]](env = main_env)} if that \code{optional_steps} element
+exists. \code{main_env} is the evaluation environment of
+\code{stabli::stat_table_make_from_by_list}.
+\item Run \code{on.exit(optional_steps[["on_exit"]](env = main_env))} if that
+\code{optional_steps} element exists.
+\item Run \code{stabli::handle_arg_by_et_subset_et_by_style_inplace}.
+\item Run \code{optional_steps[["pre_lapply"]](env = main_env)} if that \code{optional_steps}
+element exists.
+\item Run \code{lapply} on \code{by_list}. For each element
+\itemize{
+\item Run \code{optional_steps[["lapply_on_entry"]](env = anon_fun_env)}
+if that \code{optional_steps} element exists. \code{anon_fun_env} is the
+evaluation environment of the anonymous function passed to
+\code{lapply} defined in the body of
+\code{stabli::stat_table_make_from_by_list}.
+\item Run \code{on.exit(optional_steps[["lapply_on_exit"]](env = anon_fun_env))}
+if that \code{optional_steps} element exists.
+\item Create argument list \code{arg_list_i} for calling function named
+\code{fun_nm}. It is created by collecting \code{dataset}, \code{subset}, \code{by}
+(current element of \code{by_list}), and
+\code{by_style} into a list, and by appending argument
+\code{arg_list} to it. \code{by} is additionally processed by
+\code{stabli::handle_arg_by}.
+\item If \code{arg_list_i[["by"]]} is at this point a \code{data.table} and
+contains any \code{NA} strata, those \code{NA} strata are dropped.
+\code{arg_list_i[["by"]]} contains \code{NA} strata at least if
+\code{stratification_vame}
+allows for \code{NA} values for \code{by}.
+\item Run \code{optional_steps[["lapply_pre_stat_fun_call"]](env = anon_fun_env)}
+if that \code{optional_steps} element exists.
+\item Call function named \code{fun_nm} using \code{arg_list_i}.
+\item Run \code{optional_steps[["lapply_post_stat_fun_call"]](env = anon_fun_env)}
+if that \code{optional_steps} element exists.
+\item If \code{harmonisation_vame} is not \code{NULL}:
+\itemize{
+\item Run \code{optional_steps[["lapply_pre_harmonisation_call"]](env = anon_fun_env)}
+if that \code{optional_steps} element exists.
+\item Call \code{harmonisation_vame@vame_harmonise_dt} on the
+partial statistics table.
+\item Run \code{optional_steps[["lapply_post_harmonisation_call"]](env = anon_fun_env)}
+if that \code{optional_steps} element exists.
+}
+}
+\item Run \code{optional_steps[["post_lapply"]](env = main_env)}
+if that \code{optional_steps} element exists.
+}
+
+Returns a \code{data.table} with the additional class \code{stat_table}.
 }
 
 \section{News for version 0.4.0}{
@@ -75,6 +190,14 @@ metadata. The resulting \code{stat_table} is returned.
 
 \code{stabli::stat_table_make_from_expr} gains argument
 \code{stratification_vame}.
+
+
+
+\code{stabli::stat_table_make_from_by_list} arg \code{optional_steps} elem
+gains element \code{lapply_pre_harmonisation_call}.
+
+\code{stabli::stat_table_make_from_by_list} arg \code{optional_steps} elem
+gains element \code{lapply_post_harmonisation_call}.
 }
 
 \section{News for version 0.3.0}{

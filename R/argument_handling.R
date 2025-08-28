@@ -165,17 +165,16 @@ assert_is_arg_by <- function(
         )
       )
       if (!inherits(x[[i]], c("NULL", "data.table"))) {
-        dbc::assert_is_TRUE(
-          x = !is.null(names(x)) && names(x)[i] != "",
-          x_nm = sprintf(
-            "!is.null(names(%s)) && names(%s)[%i] != \"\"",
-            x_nm,
-            x_nm,
-            i
-          ),
-          call = call,
-          assertion_type = assertion_type
-        )
+        if (is.null(names(x)) || names(x)[i] == "") {
+          stop(simpleError(sprintf(paste0(
+            "Argument `by` was a `list` with a vector as (at least) one ",
+            "element, but this element did not have a name. While e.g.",
+            "`list(data.table::data.table(a = 1:3), b = 3:1)` is allowed, ",
+            "`list(data.table::data.table(a = 1:3), 3:1)` is not. ",
+            "The `by` argument had elements with these classes: `",
+            deparse1(lapply(x, class)), "`"
+          )), call = call))
+        }
       }
     })
   }

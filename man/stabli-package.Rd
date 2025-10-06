@@ -163,11 +163,13 @@ Run the numbered scripts in \verb{./dev/} to create a new release.
 }
 \section{News}{
 
-\subsection{News for version 1.0.0}{
-\subsection{fcrcore::call_with_arg_list}{
+\subsection{News for version 0.4.2}{
+\subsection{stabli::[.stat_table}{
 
-\verb{[fcrcore::call_with_arg_list]} argument \code{arg_list} handling robustified,
-now tolerates a list of length zero.
+\verb{stabli::[.stat_table} now calls \code{stabli::stat_table_meta_set} only with
+column names that exist in output. Formerly it attempted to use all
+metadata from its input which would raise an error if a column in input
+did not exist in output.
 }
 
 }

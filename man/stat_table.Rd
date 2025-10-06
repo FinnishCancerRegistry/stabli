@@ -137,6 +137,15 @@ elements in the individual \code{stat_table} objects with
 }
 }
 
+\section{News for version 0.4.2}{
+
+
+\verb{stabli::[.stat_table} now calls \code{stabli::stat_table_meta_set} only with
+column names that exist in output. Formerly it attempted to use all
+metadata from its input which would raise an error if a column in input
+did not exist in output.
+}
+
 \examples{
 
 # stabli::stat_table_set
@@ -204,7 +213,7 @@ st <- stabli::as.stat_table(
 )
 print(st)
 
-# stabli::`[.stat_table`
+# stabli::[.stat_table
 dt <- data.table::CJ(sex = 1:2, agegroup = 1:18)
 dt[, "n" := sample(1e3L, .N)]
 stabli::stat_table_set(
@@ -219,6 +228,12 @@ stopifnot(
   inherits(dt[1:3, ], class(dt)[1]),
   dt[1:3, sum(.SD[[1]]), .SDcols = "sex"] == 3
 )
+obs <- subset(dt, subset = dt[["agegroup"]] == 18, select = c("sex", "n"))
+stopifnot(
+  inherits(obs, class(dt)[1]),
+  unlist(stabli::stat_table_meta_get(obs)) \%in\% names(obs)
+)
+
 
 # stabli::stat_table_setnames
 dt <- data.table::CJ(sex = 1:2, agegroup = 1:18)

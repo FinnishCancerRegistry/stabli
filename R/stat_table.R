@@ -239,7 +239,7 @@ print.stat_table <- function(x, ...) {
 #' @param ... passed to next method (see `?"["`)
 #' @examples
 #'
-#' # stabli::`[.stat_table`
+#' # stabli::[.stat_table
 #' dt <- data.table::CJ(sex = 1:2, agegroup = 1:18)
 #' dt[, "n" := sample(1e3L, .N)]
 #' stabli::stat_table_set(
@@ -254,13 +254,27 @@ print.stat_table <- function(x, ...) {
 #'   inherits(dt[1:3, ], class(dt)[1]),
 #'   dt[1:3, sum(.SD[[1]]), .SDcols = "sex"] == 3
 #' )
+#' obs <- subset(dt, subset = dt[["agegroup"]] == 18, select = c("sex", "n"))
+#' stopifnot(
+#'   inherits(obs, class(dt)[1]),
+#'   unlist(stabli::stat_table_meta_get(obs)) %in% names(obs)
+#' )
+#'
 "[.stat_table" <- function(x, ...) {
   # @codedoc_comment_block stabli::[.stat_table
   # Subsetting / extraction method for class `stat_table`.
   # @codedoc_comment_block stabli::[.stat_table
+  # @codedoc_comment_block news("stabli::[.stat_table", "2025-10-06", "0.4.2")
+  # `stabli::[.stat_table` now calls `stabli::stat_table_meta_set` only with
+  # column names that exist in output. Formerly it attempted to use all
+  # metadata from its input which would raise an error if a column in input
+  # did not exist in output.
+  # @codedoc_comment_block news("stabli::[.stat_table", "2025-10-06", "0.4.2")
   y <- NextMethod()
   if (is.data.frame(y)) {
-    stabli::stat_table_meta_set(y, stabli::stat_table_meta_get(x))
+    meta <- stabli::stat_table_meta_get(x)
+    meta <- lapply(meta, intersect, y = names(y))
+    stabli::stat_table_meta_set(y, meta)
   }
   return(y)
 }

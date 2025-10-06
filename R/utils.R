@@ -54,10 +54,6 @@ call_with_arg_list <- function(
   dbc::assert_is_list(arg_list)
   dbc::assert_is_environment(envir)
   if (is.null(names(arg_list))) {
-    # @codedoc_comment_block news("fcrcore::call_with_arg_list", "2025-03-12", "1.0.0")
-    # `[fcrcore::call_with_arg_list]` argument `arg_list` handling robustified,
-    # now tolerates a list of length zero.
-    # @codedoc_comment_block news("fcrcore::call_with_arg_list", "2025-03-12", "1.0.0")
     names(arg_list) <- rep("", length(arg_list))
   }
   arg_lines <- vapply(seq_along(arg_list), function(i) {

@@ -28,7 +28,7 @@ assert_is_arg_by_style <- function(
   # @codedoc_comment_block stabli::assert_is_arg_by_style
   # `stabli::assert_is_arg_by_style` runs assertions on its input.
   # `by_style` must be either `NULL` or one of
-  # `${deparse1(by_style_options())}`.
+  # `${deparse1(stabli:::by_style_options())}`.
   # @codedoc_comment_block stabli::assert_is_arg_by_style
   dbc::assert_is_one_of(
     x,
